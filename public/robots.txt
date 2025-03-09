@@ -1,3 +1,8 @@
 User-agent: *
-Disallow: /private-page
-Sitemap: https://amal-alexander.online/sitemap.xml
+Allow: /
+Sitemap: https://amalalexander.com/sitemap.xml
+
+# Disallow access to specific files and directories
+Disallow: /private/
+Disallow: /.git/
+Disallow: /node_modules/
