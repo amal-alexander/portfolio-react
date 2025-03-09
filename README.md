@@ -114,15 +114,10 @@ npm run dev
 ```
 Navigate to [http://localhost:5173](http://localhost:5173) to view your portfolio.
 
-## 🔗 Links
-- **Live Demo**: [Link](https://itsmesarthak.netlify.app/)
-- **GitHub Repository**: [Portfolio Repo](https://github.com/SartHak-0-Sach/ReactJS-portfolio-website)
 
 **Author**
-<b><strong>Sarthak Sachdev</strong></b>
-- Website - [Sarthak Sachdev](https://itsmesarthak.netlify.app/)
-- LinkedIn - [Sarthak Sachdev](https://www.linkedin.com/in/sarthak2004/)
-- Twitter - [@sarthak_sach69](https://www.twitter.com/sarthak_sach69)
+<b><strong>Amal Alexander</strong></b>
+
 
 ## 🚀 More
 Feel free to explore and contribute! Future updates may include new sections and more advanced animations.
