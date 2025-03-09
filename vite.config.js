@@ -5,15 +5,24 @@ export default defineConfig({
   plugins: [react()],
   base: '/',
   server: {
-    port: 5174, // Ensure this port is available
-    open: true, // Automatically open the browser
-    host: '0.0.0.0', // Allow access from external devices (optional)
+    port: 5174,
+    open: true,
+    host: '0.0.0.0',
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
+    chunkSizeWarningLimit: 600, // Adjust the size limit for chunk size warnings
     rollupOptions: {
-      external: ['@mui/icons-material'] // Externalize the MUI icons package if necessary
-    }
+      output: {
+        manualChunks(id) {
+          // Example: Create a separate chunk for lottie-web
+          if (id.includes('node_modules/lottie-web')) {
+            return 'lottie'; // This creates a new chunk named 'lottie'
+          }
+          // You can add more conditions for other libraries as needed
+        },
+      },
+    },
   },
 });
