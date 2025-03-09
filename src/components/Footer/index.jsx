@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import GithubIcon from '@mui/icons-material/Github';
 import { Bio } from '../../data/constants';
 import Lottie from 'lottie-react';
 import instagramAnim from '../../images/instagram.json';
