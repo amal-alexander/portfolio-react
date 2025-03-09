@@ -1,0 +1,43 @@
+/* styles.css */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --black: #cbd5e1;
+        --bg-white: #1d1d1d;
+        --body: #141414;
+        --bg-super-green: #48d660;
+        --bg-super-red: #f23b3b;
+        --bg-super-orange: #ff8452;
+        --bg-usergrowth-orange: #fb5654;
+        --usergrowth-gray: #9a9a9a;
+        --usergrowth-orange: #fb5654;
+        --usergrowth-sponsored-bg: #fff5e1;
+        --usergrowth-sponsored-color: #c39959;
+        --usergrowth-no-follow-bg: #ffe3e2;
+        --usergrowth-no-follow-color: #b46862;
+        --bg-usergrowth-new-purple: #cccaea;
+        --usergrowth-new-purple: #cccaea;
+        --usergrowth-light-gray: #9096a2;
+        --usergrowth-orange-border: #fb5654;
+        --usergrowth-dark-gray: #94a3b8;
+        --table-tr: #475569;
+        --text-gray-900: #111827;
+        --text-gray-700: #fff;
+        --text-gray-500: #6b7280;
+        --bg-gray-400: #334155;
+        --bg-gray-300: #e3e8ef;
+        --text-white: #fff;
+        --text-white-800: hsla(0, 0%, 100%, .6);
+        --bg-gray-100: #1e293b;
+        --cream: #334155;
+        --header: #1e293b;
+        --border-dark-box: #333;
+        --text-error: #f23b3b;
+        --hr-color: #3b4a62;
+        --light-orange: #fee;
+        --medium-orange: #f4825c;
+        --orange: #fa5738;
+        --dark-orange: #8d4a3c;
+        --dark-grey: #343537;
+        --bg-dark-grey: #343537;
+    }
+}
