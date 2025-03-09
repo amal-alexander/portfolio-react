@@ -149,8 +149,8 @@ const Experience = () => {
         },
         {
             title: "SEO Assistant Manager",
-            company: "Digitas",
-            logo: "src/images/bc_web_wise_logo.jpeg",
+            company: "BC WEB WISE",
+            logo: "https://yt3.googleusercontent.com/ytc/AIdro_kaMg42lZ3dRIketwATNs6gQY8cEQCpxusFrgCh8v70dQ=s900-c-k-c0x00ffffff-no-rj",
             isMain: false,
             duration: "2020 - 2022",
             achievements: [
@@ -163,7 +163,7 @@ const Experience = () => {
         {
             title: "SEO Analyst",
             company: "Promodome",
-            logo: "src/images/1630638016567.jpeg",
+            logo: "https://media.licdn.com/dms/image/v2/C4E0BAQFS6fbQBa0z_w/company-logo_200_200/company-logo_200_200/0/1630638016567?e=2147483647&v=beta&t=SQuGE4lsMN5iCBSD9wDBDwWapo36Hp0NDNdWffOnDfI",
             isMain: false,
             duration: "2019 - 2020",
             achievements: [
