@@ -12,5 +12,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    rollupOptions: {
+      external: ['@mui/icons-material'] // Externalize the MUI icons package if necessary
+    }
   },
 });
