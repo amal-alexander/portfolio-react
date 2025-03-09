@@ -137,7 +137,7 @@ const Experience = () => {
         {
             title: "Senior SEO Specialist",
             company: "Performics",
-            logo: "src/images/images.png",
+            logo: "./src/images/images.png",
             isMain: true,
             duration: "2022 - Present",
             achievements: [

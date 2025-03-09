@@ -32,6 +32,7 @@
     "react-router-dom": "^6.24.1",
     "react-scroll": "^1.9.0",
     "react-tsparticles": "^2.12.2",
+    "sitemap": "^8.0.0",
     "styled-components": "^6.1.15",
     "tsparticles": "^3.8.1",
     "typescript": "^5.8.2",

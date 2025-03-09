@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /private-page
+Sitemap: https://amal-alexander.online/sitemap.xml
