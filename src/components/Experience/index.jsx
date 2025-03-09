@@ -135,9 +135,9 @@ const CompanyInfo = styled.div`
 const Experience = () => {
     const experiences = [
         {
-            title: "Senior SEO Specialist",
+            title: "Senior Associate (Search Performance)",
             company: "Performics",
-            logo: "./src/images/images.png",
+            logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsj3I2VEzV4lHO4xgDJehxK6AvLk4DODkfWA&s",
             isMain: true,
             duration: "2022 - Present",
             achievements: [
@@ -148,7 +148,7 @@ const Experience = () => {
             ]
         },
         {
-            title: "Digital Marketing Specialist",
+            title: "SEO Assistant Manager",
             company: "Digitas",
             logo: "src/images/bc_web_wise_logo.jpeg",
             isMain: false,
