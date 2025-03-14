@@ -51,3 +51,41 @@ body{
     transition: none;
   }
 }
+/* src/App.css */
+.blog-container {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.blog-title {
+  font-size: 2rem;
+  color: #333;
+}
+
+.blog-post {
+  margin: 10px 0;
+  padding: 10px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.blog-post:hover {
+  background: #f1f1f1;
+}
+
+.link {
+  text-decoration: none;
+  color: #007bff;
+}
+/* src/App.css */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}

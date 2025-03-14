@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import ParticleBackground from "../ParticleBackground";// Ensure this component exists
+
 
 const Container = styled.div`
     display: flex;
@@ -10,12 +10,7 @@ const Container = styled.div`
     position: relative;
     z-index: 1;
     align-items: center;
-    padding: 80px 0px;
-    background: linear-gradient(
-        343.07deg,
-        rgba(132, 59, 206, 0.06) 5.71%,
-        rgba(132, 59, 206, 0) 64.83%
-    );
+    padding: 50px 0px;
 `;
 
 const ParticleContainer = styled.div`
@@ -25,7 +20,6 @@ const ParticleContainer = styled.div`
     right: 0;
     bottom: 0;
     z-index: 0;
-    opacity: 0.5;
 `;
 
 const Wrapper = styled.div`
@@ -33,85 +27,87 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 2;
-    width: 100%;
-`;
-
-const Title = styled(motion.h1)`
-    font-size: 42px;
-    color: ${({ theme }) => theme.text_primary || 'black'};
-    margin-bottom: 20px;
-    text-align: center;
-`;
-
-const StatsContainer = styled(motion.div)`
     width: 100%;
     max-width: 1100px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 0;
-    position: relative;
-    z-index: 3;
+    gap: 24px;
 `;
 
-const StatCard = styled.div`
-    background: white;
-    border-radius: 16px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 24px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 350px; // Set a max width for the cards
+const Title = styled(motion.div)`
+    font-size: 42px;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 20px;
+    color: ${({ theme }) => theme.text_primary};
+    @media (max-width: 768px) {
+        font-size: 32px;
+    }
+`;
+
+const Desc = styled(motion.div)`
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    color: ${({ theme }) => theme.text_secondary};
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
+`;
+
+const StatsImage = styled(motion.img)`
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
 `;
 
 const GithubStats = () => {
-    const username = "amal-alexander";
-
     return (
         <Container id="github">
-            <ParticleContainer>
-                <ParticleBackground />
-            </ParticleContainer>
+            
             <Wrapper>
                 <Title
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                 >
                     GitHub Stats
                 </Title>
-                <StatsContainer
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                <Desc
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    <StatCard>
-                        <img 
-                            src={`https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api?username=${username}&show_icons=true&theme=radical&hide_border=true&bg_color=0D1117&title_color=854CE6&icon_color=854CE6&text_color=FFFFFF`}
-                            alt="GitHub Stats"
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </StatCard>
-                    <StatCard>
-                        <img 
-                            src={`https://github-readme-streak-stats.herokuapp.com/?user=${username}&theme=radical&hide_border=true&background=0D1117&stroke=854CE6&ring=854CE6&fire=854CE6&currStreakLabel=854CE6&sideLabels=854CE6`}
-                            alt="GitHub Streak Stats"
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </StatCard>
-                    <StatCard>
-                        <img 
-                            src={`https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/top-langs/?username=${username}&layout=compact&theme=radical&hide_border=true&bg_color=0D1117&title_color=854CE6&text_color=FFFFFF`}
-                            alt="Most Used Languages"
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </StatCard>
-                </StatsContainer>
+                    These are my real-time GitHub statistics fetched from GitHub Readme Stats.
+                </Desc>
+
+                {/* GitHub Stats Card */}
+                <StatsImage
+                    src="https://github-readme-stats.vercel.app/api?username=amal-alexander&theme=dark&hide_border=true&include_all_commits=true&count_private=true"
+                    alt="GitHub Stats"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.8 }}
+                />
+
+                {/* Top Languages Card */}
+                <StatsImage
+                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=amal-alexander&layout=compact&theme=dark&hide_border=true"
+                    alt="Top Languages"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                />
+
+                {/* GitHub Contribution Graph */}
+                <StatsImage
+                    src="https://github-contributor-stats.vercel.app/api?username=amal-alexander&limit=5&theme=dark&combine_all_yearly_contributions=true"
+                    alt="Contribution Stats"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                />
             </Wrapper>
         </Container>
     );
 };
 
-export default GithubStats;     
+export default GithubStats;
