@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
-import './App.css';
-import styled, { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from './utils/Themes';
-import Navbar from "./components/Navbar/index";
-import Hero from "./components/HeroSection/index";
-import Skills from "./components/Skills/index";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import styled, { ThemeProvider } from "styled-components";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
+// Theme
+import { darkTheme, lightTheme } from './utils/Themes';
+import './App.css';
+
+// Components
+import Navbar from "./components/Navbar";
+import Hero from "./components/HeroSection";
+import Skills from "./components/Skills";
 import Experience from './components/Experience';
-import Projects from './components/Projects/index.jsx';
-import Contact from './components/Contact/index.jsx';
-import Footer from './components/Footer/index.jsx';
-import ProjectDetails from './components/ProjectDetails/index.jsx';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import ProjectDetails from './components/ProjectDetails';
 import GithubStats from './components/GithubStats';
 import Socials from './components/Socials';
 import HeroBgAnimation from './components/HeroBgAnimation';
-import FAQ from './components/FAQ/FAQ.jsx';
-import ScrollArrow from './components/ScrollArrow';
-import Blog from './components/Blog'; // Blog main page
-import BlogDetail from './components/Blog/BlogDetail'; // Corrected import for individual blog details page
+import FAQ from './components/FAQ/FAQ';
+import BlogDetail from './components/Blog/BlogDetail';
 import SEOTool from "./components/SEOTool";
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import AddPost from './components/Blog/AddPost';
+import PostList from './components/Blog/PostList';
+import ErrorBoundary from './components/ErrorBoundary';
+import ScrollArrow from './components/ScrollArrow';
+import AboutMe from './components/AboutMe';
+import Portfolio from './components/Portfolio';
 
-// Styled components
+
+// API
+import { getPosts, createPost } from './api';
+
+// Styled Components
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
   width: 100%;
@@ -31,8 +43,15 @@ const Body = styled.div`
 `;
 
 const Wrapper = styled.div`
-  background: linear-gradient(38.73deg, rgba(204, 0, 187, 0.15) 0%, rgba(201, 32, 184, 0) 50%), 
-              linear-gradient(141.27deg, rgba(0, 70, 209, 0) 50%, rgba(0, 70, 209, 0.15) 100%);
+  background: linear-gradient(
+    38.73deg, 
+    rgba(204, 0, 187, 0.15) 0%, 
+    rgba(201, 32, 184, 0) 50%
+  ), linear-gradient(
+    141.27deg, 
+    rgba(0, 70, 209, 0) 50%, 
+    rgba(0, 70, 209, 0.15) 100%
+  );
   width: 100%;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 98%, 0 100%);
 `;
@@ -64,67 +83,106 @@ const BgContainer = styled.div`
   }
 `;
 
+const MainContent = styled.div`
+  padding: 20px;
+  min-height: calc(100vh - 70px); // Adjust based on your navbar height
+`;
+
 const App = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [openModal, setOpenModal] = useState({ state: false, project: null });
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchedPosts = await getPosts();
+        setPosts(fetchedPosts || []);
+      } catch (err) {
+        setError(err.message || "Failed to fetch posts");
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const handlePostAdded = (newPost) => {
+    setPosts((prevPosts) => [...prevPosts, newPost]);
+  };
 
   return (
-    <HelmetProvider>
-      <Helmet>
-        <title>Amal Alexander - SEO & Web Technology Expert</title>
-        <meta name="description" content="Welcome to the portfolio of Amal Alexander, showcasing skills in web development, data science, and innovative projects." />
-        <meta name="keywords" content="Amal Alexander, portfolio, web development, data science, programming, skills, projects" />
-        <meta name="author" content="Amal Alexander" />
-      </Helmet>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <Helmet>
+          <title>Amal Alexander - SEO & Web Technology Expert</title>
+          <meta name="description" content="Welcome to the portfolio of Amal Alexander, showcasing skills in web development, data science, and innovative projects." />
+          <meta name="keywords" content="Amal Alexander, portfolio, web development, data science, programming, skills, projects" />
+          <meta name="author" content="Amal Alexander" />
+        </Helmet>
 
-      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-        <Router>
-          <Body>
-            <Navbar />
-            <ScrollArrow />
-
-            <Routes>
-              {/* Homepage */}
-              <Route path="/" element={
-                <>
-                  <Hero />
-                  <Wrapper>
-                    <Skills />
-                    <Experience />
-                  </Wrapper>
-                  <GithubStats />
-                  <Projects openModal={openModal} setOpenModal={setOpenModal} />
-                  <BottomContainer>
-                    <BgContainer>
-                      <HeroBgAnimation />
-                    </BgContainer>
-                    <Wrapper style={{ position: 'relative', zIndex: 1 }}>
-                      <Socials />
-                      <Contact />
-                      <FAQ />
-                    </Wrapper>
-                  </BottomContainer>
-                </>
-              } />
-
-              {/* Blog Page */}
-              <Route path="/blog" element={<Blog />} />
-              {/* Blog Detail Page */}
-              <Route path="/blog/:title" element={<BlogDetail />} />
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+          <Router>
+            <Body>
+              <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+              <ScrollArrow />
               
-              {/* SEO Tool Page */}
-              <Route path="/seo-tool" element={<SEOTool />} />
-            </Routes>
+              <MainContent>
+                <Routes>
+                  <Route path="/" element={
+                    <>
+                      <Hero />
+                      <Wrapper>
+                        <Skills />
+                        <Experience />
+                      </Wrapper>
+                      <GithubStats />
+                      <Projects openModal={openModal} setOpenModal={setOpenModal} />
+                      <BottomContainer>
+                        <BgContainer>
+                          <HeroBgAnimation />
+                        </BgContainer>
+                        <Wrapper style={{ position: 'relative', zIndex: 1 }}>
+                          <Socials />
+                          <Contact />
+                          <FAQ />
+                        </Wrapper>
+                      </BottomContainer>
+                    </>
+                  } />
 
-            <Footer />
-            {openModal.state && (
-              <ProjectDetails openModal={openModal} setOpenModal={setOpenModal} />
-            )}
-          </Body>
-        </Router>
-      </ThemeProvider>
-    </HelmetProvider>
+                  <Route path="/blog" element={
+                    <>
+                      <h1>Blog</h1>
+                      {error ? (
+                        <p style={{ color: 'red' }}>Error fetching posts: {error}</p>
+                      ) : (
+                        <>
+                          <AddPost onPostAdded={handlePostAdded} />
+                          <PostList posts={posts} />
+                        </>
+                      )}
+                    </>
+                  } />
+
+                  <Route path="/blog/:title" element={<BlogDetail />} />
+                  <Route path="/seo-tool" element={<SEOTool />} />
+                  <Route path="/about-me" element={<AboutMe />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                </Routes>
+              </MainContent>
+
+              <Footer />
+              {openModal?.state && openModal?.project && (
+                <ProjectDetails openModal={openModal} setOpenModal={setOpenModal} />
+              )}
+            </Body>
+          </Router>
+        </ThemeProvider>
+      </HelmetProvider>
+      <SpeedInsights />
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;

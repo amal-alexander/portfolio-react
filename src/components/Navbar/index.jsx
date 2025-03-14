@@ -90,10 +90,11 @@ const CloseIcon = styled(FaTimes)`
     color: white;
 `;
 
-const Navbar = () => {
+const Navbar = ({ darkMode, setDarkMode, onScrollClick }) => {
     const [open, setOpen] = useState(false);
 
-    const scrollToSection = (id) => {
+    const scrollToSection = (e, id) => {
+        e.preventDefault();
         const element = document.getElementById(id);
         if (element) {
             const navHeight = 80; // Adjust based on your navbar height
@@ -105,39 +106,44 @@ const Navbar = () => {
                 behavior: 'smooth'
             });
         }
+        setOpen(false);
     };
 
     const handleLinkClick = (e, id) => {
-        if (id !== 'blog' && id !== 'seo-tool') {
-            e.preventDefault();
-            scrollToSection(id);
+        if (id === 'blog' || id === 'seo-tool') {
+            setOpen(false);
+            return; // Let these links navigate normally
         }
-        setOpen(false);
+        scrollToSection(e, id);
     };
 
     return (
         <NavbarContainer>
-            {/* Logo */}
             <NavLogo to="/">
                 <DiCssdeck size="3rem" />
                 <span style={{ marginLeft: '8px' }}>Amal Alexander</span>
             </NavLogo>
 
-            {/* Mobile Menu Icon */}
             <MobileIcon onClick={() => setOpen(!open)}>
                 {open ? <FaTimes size="1.5em" color="white" /> : <FaBars size="1.5em" color="white" />}
             </MobileIcon>
 
-            {/* Desktop Navbar */}
+            {/* Desktop Navigation */}
             <NavItems>
                 {navItems.map(({ id, label }) => (
-               <NavLink 
-               key={id}
-               to={id === 'blog' ? '/blog' : id === 'seo-tool' ? '/seo-tool' : `#${id}`}
-               onClick={(e) => handleLinkClick(e, id)}
-           >
-               {label}
-           </NavLink>
+                    id === 'blog' || id === 'seo-tool' ? (
+                        <NavLink key={id} to={`/${id}`}>
+                            {label}
+                        </NavLink>
+                    ) : (
+                        <NavLink 
+                            key={id} 
+                            href={`#${id}`}
+                            onClick={(e) => scrollToSection(e, id)}
+                        >
+                            {label}
+                        </NavLink>
+                    )
                 ))}
             </NavItems>
 
@@ -146,13 +152,19 @@ const Navbar = () => {
                 <MobileMenu>
                     <CloseIcon onClick={() => setOpen(false)} />
                     {navItems.map(({ id, label }) => (
-                        <NavLink 
-                            key={id}
-                            to={id === 'blog' || id === 'seo-tool' ? `/${id}` : `#${id}`}
-                            onClick={(e) => handleLinkClick(e, id)}
-                        >
-                            {label}
-                        </NavLink>
+                        id === 'blog' || id === 'seo-tool' ? (
+                            <NavLink key={id} to={`/${id}`}>
+                                {label}
+                            </NavLink>
+                        ) : (
+                            <NavLink 
+                                key={id}
+                                href={`#${id}`}
+                                onClick={(e) => scrollToSection(e, id)}
+                            >
+                                {label}
+                            </NavLink>
+                        )
                     ))}
                 </MobileMenu>
             )}

@@ -1,39 +1,32 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import blogPosts from '../data/blogPosts'; 
-import './App.css';  // Ensure you have your CSS file imported
+// BlogList.jsx
+import { useEffect, useState } from 'react';
+import { getPosts } from '../api'; // your API file
+import { useNavigate } from 'react-router-dom';
+import './BlogList.css'; // optional animation styles
 
-const BlogPage = () => {
-    const [searchTerm, setSearchTerm] = useState(''); 
+const BlogList = () => {
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
-    // Filter posts based on the search term
-    const filteredPosts = blogPosts.filter(post => 
-        post.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  useEffect(() => {
+    getPosts().then(setPosts);
+  }, []);
 
-    return (
-        <div className="blog-container">
-            <h1 className="blog-title">My Blog</h1>
-            <input 
-                type="text" 
-                placeholder="Search blog posts..." 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-            />
-            <div>
-                {filteredPosts.length > 0 ? (
-                    filteredPosts.map((post) => (
-                        <Link to={`/blog/${post.slug}`} key={post.slug} className="blog-post">
-                            <h3>{post.title}</h3>
-                        </Link>
-                    ))
-                ) : (
-                    <p>No results found.</p>
-                )}
-            </div>
+  return (
+    <div className="blog-list">
+      {posts.slice(0, 3).map((post) => (
+        <div
+          key={post._id}
+          className="blog-tile animated"
+          onClick={() => navigate(`/posts/${post._id}`)}
+        >
+          <h3>{post.title}</h3>
+          <p>{post.content.slice(0, 100)}...</p>
+          <span>By {post.author}</span>
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
-export default BlogPage;
+export default BlogList;

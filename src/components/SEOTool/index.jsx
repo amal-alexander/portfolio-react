@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Snackbar } from '@mui/material';
 import { motion } from 'framer-motion';
 import SectionContainer from '../common/SectionContainer';
+import SEOChart from './SEOChart';
 
 const Container = styled.div`
     display: flex;
@@ -11,7 +12,7 @@ const Container = styled.div`
     position: relative;
     z-index: 1;
     align-items: center;
-    padding: 80px 0px;
+    padding: 80px 0;
 `;
 
 const Wrapper = styled.div`
@@ -85,19 +86,17 @@ const SEOInput = styled(motion.input)`
     }
 `;
 
-const SEOButton = styled(motion.input)`
+const SEOButton = styled(motion.button)`
     width: 100%;
-    text-decoration: none;
     text-align: center;
-    background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     padding: 13px 16px;
-    margin-top: 2px;
     border-radius: 12px;
     border: none;
     color: ${({ theme }) => theme.text_primary};
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
+    background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     &:hover {
         transform: scale(1.05);
         transition: all 0.4s ease-in-out;
@@ -105,28 +104,43 @@ const SEOButton = styled(motion.input)`
 `;
 
 const ResultBox = styled(motion.div)`
-    width: 100%;
-    max-width: 600px;
-    background-color: ${({ theme }) => theme.card};
+    background: ${({ theme }) => theme.card};
+    border-radius: 16px;
     padding: 20px;
-    margin-top: 28px;
-    border-radius: 12px;
     box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
+    margin-top: 20px;
+    width: 95%;
+    max-width: 600px;
+    font-family: 'Poppins', sans-serif; /* Add a modern font */
     color: ${({ theme }) => theme.text_primary};
-    text-align: center;
 `;
 
-const SEO = () => {
+const ResultTitle = styled.h3`
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: ${({ theme }) => theme.primary};
+`;
+
+const ResultText = styled.p`
+    font-size: 16px;
+    margin: 8px 0;
+    color: ${({ theme }) => theme.text_primary};
+`;
+
+const SEOTool = () => {
     const [url, setUrl] = useState('');
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const form = useRef();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!url) {
+            setErrorMessage('URL is required.');
             setOpen(true);
             return;
         }
@@ -134,7 +148,7 @@ const SEO = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/crawl', {
+            const response = await fetch('http://localhost:5000/audit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,33 +156,37 @@ const SEO = () => {
                 body: JSON.stringify({ url }),
             });
 
+            if (!response.ok) {
+                throw new Error('Failed to analyze the URL. Please try again.');
+            }
+
             const data = await response.json();
             setResult(data);
         } catch (error) {
             console.error(error);
+            setErrorMessage(error.message || 'Something went wrong. Please check the URL or try again.');
             setOpen(true);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
-    const formVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: 'easeOut' },
-        },
+    const prepareChartData = () => {
+        if (result) {
+            return {
+                labels: ['Internal Links', 'External Links', 'Word Count', 'Image Count'],
+                values: [
+                    result.internalLinksCount || 0,
+                    result.externalLinksCount || 0,
+                    result.wordCount || 0,
+                    result.imgCount || 0,
+                ],
+            };
+        }
+        return { labels: [], values: [] }; // Fallback if result is null
     };
 
-    const inputVariants = {
-        hidden: { opacity: 0, x: -50 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: { duration: 0.5, ease: 'easeOut' },
-        },
-    };
+    const chartData = prepareChartData();
 
     return (
         <SectionContainer>
@@ -189,30 +207,43 @@ const SEO = () => {
                         Enter a URL to analyze its SEO performance and get the results!
                     </Desc>
 
-                    <SEOForm ref={form} onSubmit={handleSubmit} variants={formVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                        <SEOFormTitle variants={inputVariants}>Enter Website URL</SEOFormTitle>
+                    <SEOForm
+                        ref={form}
+                        onSubmit={handleSubmit}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <SEOFormTitle>Enter Website URL</SEOFormTitle>
                         <SEOInput
                             type="url"
                             placeholder="Enter website URL"
-                            name="url"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             required
-                            variants={inputVariants}
                         />
                         <SEOButton
                             type="submit"
-                            value={loading ? 'Analyzing...' : 'Start SEO Audit'}
                             disabled={loading}
-                        />
+                        >
+                            {loading ? 'Analyzing...' : 'Start SEO Audit'}
+                        </SEOButton>
                     </SEOForm>
 
                     {result && (
-                        <ResultBox variants={formVariants}>
-                            <h3>SEO Results</h3>
-                            <p><strong>Title:</strong> {result.title || 'N/A'}</p>
-                            <p><strong>Description:</strong> {result.description || 'N/A'}</p>
-                            <p><strong>URL:</strong> {result.url}</p>
+                        <ResultBox>
+                            <ResultTitle>SEO Results</ResultTitle>
+                            <ResultText><strong>Title:</strong> {result.title || 'N/A'}</ResultText>
+                            <ResultText><strong>Description:</strong> {result.description || 'N/A'}</ResultText>
+                            <ResultText><strong>H1:</strong> {result.h1 || 'N/A'}</ResultText>
+                            <ResultText><strong>Canonical:</strong> {result.canonical || 'N/A'}</ResultText>
+                            <ResultText><strong>Response Status:</strong> {result.responseStatus}</ResultText>
+                            <ResultText><strong>Word Count:</strong> {result.wordCount}</ResultText>
+                            <ResultText><strong>Image Count:</strong> {result.imgCount}</ResultText>
+                            <ResultText><strong>Internal Links Count:</strong> {result.internalLinksCount}</ResultText>
+                            <ResultText><strong>External Links Count:</strong> {result.externalLinksCount}</ResultText>
+
+                            {/* Pass prepared chart data to SEOChart */}
+                            <SEOChart data={chartData} />
                         </ResultBox>
                     )}
 
@@ -220,7 +251,7 @@ const SEO = () => {
                         open={open}
                         autoHideDuration={6000}
                         onClose={() => setOpen(false)}
-                        message="Something went wrong! Please check the URL or try again."
+                        message={errorMessage}
                         severity="error"
                     />
                 </Wrapper>
@@ -229,4 +260,4 @@ const SEO = () => {
     );
 };
 
-export default SEO;
+export default SEOTool;

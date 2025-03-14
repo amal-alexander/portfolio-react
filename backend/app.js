@@ -1,78 +1,100 @@
-// app.js
-const express = require('express'); // Import express
-const mongoose = require('mongoose'); // Import mongoose
-const cors = require('cors'); // Import cors
-const BlogPost = require('./models/BlogPost'); // Import your BlogPost model
+// Import required packages
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const axios = require('axios');
+const cheerio = require('cheerio'); // For parsing HTML
 
-const app = express(); // Create an instance of express
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Use CORS middleware to allow HTTP requests from your React front end
-app.use(cors({ 
-    origin: "https://your-vercel-app-url.vercel.app" // Replace this with your actual Vercel app URL
-}));
+// Middleware
+app.use(cors()); // Enable CORS
+app.use(bodyParser.json()); // Parse JSON bodies
 
-app.use(express.json()); // Middleware to parse JSON bodies
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/blogdb', { // Use your MongoDB URI
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-// Create a new blog post
-app.post('/posts', async (req, res) => {
-    const { title, content, author } = req.body;
-
-    try {
-        const newPost = new BlogPost({ title, content, author });
-        await newPost.save();
-        res.status(201).json(newPost);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+// Root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the SEO Audit API! Use POST /audit to analyze a URL.');
 });
 
-// Get all blog posts
-app.get('/posts', async (req, res) => {
-    try {
-        const posts = await BlogPost.find();
-        res.status(200).json(posts);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Function to perform SEO audit analysis
+const performSEOAnalysis = async (url) => {
+  try {
+    // Validate URL format
+    const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    if (!urlPattern.test(url)) {
+      throw new Error('Invalid URL format. Please provide a valid URL.');
     }
-});
 
-// Update a blog post by ID
-app.put('/posts/:id', async (req, res) => {
-    const { id } = req.params;
-    const { title, content, author } = req.body;
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html); // Load HTML with Cheerio for parsing
 
-    try {
-        const updatedPost = await BlogPost.findByIdAndUpdate(id, { title, content, author }, { new: true });
-        if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
-        res.status(200).json(updatedPost);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
+    // Extract title, description, H1, canonical, etc.
+    const title = $('title').text() || 'No Title Found';
+    const description = $('meta[name="description"]').attr('content') || 'No Description Found';
+    const h1 = $('h1').first().text() || 'No H1 Found';
+    const canonical = $('link[rel="canonical"]').attr('href') || 'No Canonical Found';
+    const responseStatus = response.status; // HTTP response status
 
-// Delete a blog post by ID
-app.delete('/posts/:id', async (req, res) => {
-    const { id } = req.params;
-    
-    try {
-        const deletedPost = await BlogPost.findByIdAndDelete(id);
-        if (!deletedPost) return res.status(404).json({ message: 'Post not found' });
-        res.status(200).json({ message: 'Post deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    // Count words
+    const text = $('body').text();
+    const wordCount = text.split(/\s+/).length;
+
+    // Count images
+    const imgCount = $('img').length;
+
+    // Count internal and external links
+    const internalLinks = [];
+    const externalLinks = [];
+
+    $('a').each(function () {
+      const href = $(this).attr('href');
+      if (href && href.startsWith(url)) {
+        internalLinks.push(href);
+      } else {
+        externalLinks.push(href);
+      }
+    });
+
+    return {
+      url,
+      title,
+      description,
+      h1,
+      canonical,
+      responseStatus,
+      wordCount,
+      imgCount,
+      internalLinksCount: internalLinks.length,
+      externalLinksCount: externalLinks.length,
+      internalLinks,
+      externalLinks,
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    throw new Error(`Failed to fetch data from the provided URL: ${error.message}`);
+  }
+};
+
+// API route for auditing a URL
+app.post('/audit', async (req, res) => {
+  const { url } = req.body;
+
+  // Validate the request body
+  if (!url) {
+    return res.status(400).json({ error: 'URL is required.' });
+  }
+
+  try {
+    const auditResult = await performSEOAnalysis(url);
+    res.json(auditResult);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
