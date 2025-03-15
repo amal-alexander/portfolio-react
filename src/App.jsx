@@ -4,14 +4,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
 import { injectSpeedInsights } from "@vercel/speed-insights"; // ✅ Correct import
 
-// Theme
+// Theme Configurations
 import { darkTheme, lightTheme } from './utils/Themes';
 import './App.css';
 
-// ✅ Inject Speed Insights (DO NOT use it as a component)
+// Inject Speed Insights (DO NOT use it as a component)
 injectSpeedInsights();
 
-// Components
+// Component Imports
 import Navbar from "./components/Navbar";
 import Hero from "./components/HeroSection";
 import Skills from "./components/Skills";
@@ -72,7 +72,7 @@ const App = () => {
         <Router>
           <Body>
             <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-            
+
             <MainContent>
               <Routes>
                 <Route path="/" element={

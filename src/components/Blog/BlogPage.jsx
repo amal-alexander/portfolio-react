@@ -15,11 +15,11 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     max-width: 1100px;
-    margin: 0 auto;
+    margin: 0 auto; /* Center the max width in viewport */
 `;
 
 const Wrapper = styled.div`
-    text-align: center;
+    text-align: center; /* Ensure text is centered */
     width: 100%;
 `;
 
@@ -34,9 +34,9 @@ const Title = styled(motion.h2)`
 
 const Desc = styled(motion.p)`
     font-size: 18px;
-    max-width: 600px;
+    max-width: 600px; /* Limit the width for better readability */
     color: ${({ theme }) => theme.text_secondary};
-    margin-bottom: 40px; /* Add margin for spacing */
+    margin: 20px auto 40px; /* Center the description with auto margins */
     text-align: center; /* Center align text */
 `;
 
@@ -53,7 +53,7 @@ const ToggleButton = styled(motion.div)`
     background-color: ${({ $active, theme }) => ($active ? theme.primary + 20 : theme.card)};
     color: ${({ $active, theme }) => ($active ? theme.text_primary : theme.text_secondary)};
     transition: background-color 0.3s ease, transform 0.3s ease;
-    margin: 0 10px; /* Add margin for spacing between buttons */
+    margin: 0 10px;
 
     &:hover {
         background-color: ${({ $active, theme }) => ($active ? theme.primary + 30 : theme.primary + 10)};
