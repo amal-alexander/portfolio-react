@@ -1,50 +1,52 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
-const Card = styled.div`
-    background: ${({ theme }) => theme.card};
-    border-radius: 16px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+// Styled Components for Blog Card
+const CardContainer = styled(motion.div)`
+    border: 1px solid var(--text-gray-700); /* Using the CSS variable */
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 250px;
+    max-width: 300px;
+    margin: 10px;
+    background-color: var(--bg-white); /* Background for light mode */
+    color: var(--text-gray-700); /* Text color for dark mode */
+    transition: background-color 0.3s ease;
 
+    /* Adding a hover effect */
     &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        background-color: var(--bg-gray-100); /* Lightens on hover */
     }
+
+    opacity: 0;  // To enable the animation on mount
 `;
 
-const Title = styled.h2`
-    font-size: 20px;
+const CardTitle = styled(motion.h3)`
+    margin: 0 0 10px 0;
+    font-size: 1.25rem;  /* Adjusted font size */
     font-weight: 600;
-    color: ${({ theme }) => theme.text_primary};
-    margin-bottom: 8px;
+    color: var(--text-gray-900); /* Main title color */
 `;
 
-const Description = styled.p`
-    font-size: 14px;
-    color: ${({ theme }) => theme.text_secondary};
-    margin-bottom: 16px;
+const CardContent = styled(motion.p)`
+    margin: 10px 0;
+    font-size: 1rem;  /* Font size for content */
+    color: var(--text-gray-500); /* Lighter text color */
 `;
 
-const MetaData = styled.div`
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: ${({ theme }) => theme.text_secondary};
+const CardDate = styled.span`
+    font-size: 0.8em;
+    color: var(--text-gray-500); /* Date color consistent with theme */
 `;
 
-const BlogCard = ({ post, onClick }) => {
+const BlogCard = ({ post }) => {
     return (
-        <Card onClick={onClick}>
-            <Title>{post.title}</Title>
-            <Description>{post.content.substring(0, 100)}...</Description>
-            <MetaData>
-                <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                <span>{post.readTime}</span>
-            </MetaData>
-        </Card>
+        <CardContainer animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+            <CardTitle>{post.title}</CardTitle>
+            <CardContent>{post.content}</CardContent>
+            <CardDate>{new Date(post.createdAt).toLocaleDateString() || 'Invalid Date'}</CardDate>
+        </CardContainer>
     );
 };
 

@@ -1,96 +1,161 @@
-import { useState, useRef } from "react";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import BlogCard from './BlogCard';
+import BlogDetails from './BlogDetails'; // Import BlogDetails
+import { motion } from 'framer-motion';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const blogs = [
-    { id: 1, title: "How to Improve SEO Rankings", category: "SEO", description: "Learn the best strategies to rank higher on Google.", image: "/images/seo-blog.jpg" },
-    { id: 2, title: "React vs Next.js: Which One to Choose?", category: "Development", description: "A detailed comparison of React and Next.js for web apps.", image: "/images/react-next.jpg" },
-    { id: 3, title: "10 Tips for Web Performance Optimization", category: "Performance", description: "Speed up your website with these performance tricks.", image: "/images/performance-tips.jpg" }
-];
+// Styled Components
+const Container = styled.div`
+    background: linear-gradient(343.07deg, rgba(132, 59, 206, 0.06) 5.71%, rgba(132, 59, 206, 0) 64.83%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    padding: 50px 20px;
+`;
 
-const categories = ["All", "SEO", "Development", "Performance"];
+const Wrapper = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1350px;
+    padding: 10px 0px 100px 0;
+    gap: 12px;
+`;
 
-function BlogPage() {
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const blogContainerRef = useRef(null); // Ref for blog grid
+const Title = styled.div`
+    font-size: 42px;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 20px;
+    color: ${({ theme }) => theme.text_primary};
+`;
 
-    const filteredBlogs = selectedCategory === "All"
-        ? blogs
-        : blogs.filter((blog) => blog.category === selectedCategory);
+const Desc = styled.div`
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    color: ${({ theme }) => theme.text_secondary};
+`;
 
-    // Scroll left
-    const scrollLeft = () => {
-        if (blogContainerRef.current) {
-            blogContainerRef.current.scrollBy({ left: -300, behavior: "smooth" });
-        }
+const SliderContainer = styled.div`
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+`;
+
+const SliderButton = styled.button`
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: ${({ theme }) => theme.card};
+    color: ${({ theme }) => theme.text_primary};
+    padding: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+        background: ${({ theme }) => theme.card_light};
+    }
+
+    ${props => props.direction === 'left' ? 'left: 0;' : 'right: 0;'}
+`;
+
+const CardContainer = styled(motion.div)`
+    display: flex;
+    gap: 28px;
+    padding: 20px;
+    overflow: hidden;
+`;
+
+const Blog = () => {
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [openModal, setOpenModal] = useState({ state: false, blog: null }); // State for modal visibility
+    const postsPerPage = 3;
+
+    useEffect(() => {
+        import('../../data/blogPosts').then(module => {
+            setPosts(module.default);
+            setLoading(false);
+        }).catch(err => {
+            setError('Failed to load blog posts');
+            setLoading(false);
+        });
+    }, []);
+
+    const totalPages = Math.ceil(posts.length / postsPerPage);
+    const currentPosts = posts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
+
+    const nextPage = () => {
+        setCurrentPage((prev) => (prev + 1) % totalPages);
     };
 
-    // Scroll right
-    const scrollRight = () => {
-        if (blogContainerRef.current) {
-            blogContainerRef.current.scrollBy({ left: 300, behavior: "smooth" });
-        }
+    const prevPage = () => {
+        setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+    };
+
+    const openBlogDetails = (blog) => {
+        setOpenModal({ state: true, blog });
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen p-8 relative">
-            <h1 className="text-4xl font-bold text-center mb-6">Blog Posts</h1>
-            
-            {/* Category Filters */}
-            <div className="flex justify-center gap-4 mb-6">
-                {categories.map((category) => (
-                    <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-2 rounded font-semibold transition ${
-                            selectedCategory === category 
-                                ? "bg-purple-600 text-white shadow-lg scale-105" 
-                                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
+        <Container>
+            <Wrapper id="blog">
+                <Title>My Blog</Title>
+                <Desc>
+                    Explore my thoughts and insights on various topics in technology and development.
+                </Desc>
+                <SliderContainer>
+                    <SliderButton direction="left" onClick={prevPage}>
+                        <FaChevronLeft />
+                    </SliderButton>
+                    <CardContainer
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
                     >
-                        {category}
-                    </button>
-                ))}
-            </div>
+                        {loading ? (
+                            <div>Loading...</div>
+                        ) : error ? (
+                            <div>{error}</div>
+                        ) : (
+                            currentPosts.map((post, index) => (
+                                <BlogCard 
+                                    key={index} 
+                                    post={post} 
+                                    onClick={() => openBlogDetails(post)} // Pass blog post to the handler
+                                />
+                            ))
+                        )}
+                    </CardContainer>
+                    <SliderButton direction="right" onClick={nextPage}>
+                        <FaChevronRight />
+                    </SliderButton>
+                </SliderContainer>
+            </Wrapper>
 
-            {/* Arrows */}
-            <button 
-                onClick={scrollLeft} 
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full shadow-lg hover:bg-gray-600 transition"
-            >
-                ←
-            </button>
-
-            {/* Blog Grid with Scroll */}
-            <div 
-                ref={blogContainerRef} 
-                className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth p-2"
-                style={{ scrollBehavior: 'smooth', whiteSpace: 'nowrap' }}
-            >
-                {filteredBlogs.length > 0 ? (
-                    filteredBlogs.map((blog) => (
-                        <div 
-                            key={blog.id} 
-                            className="bg-gray-800 p-4 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl cursor-pointer min-w-[300px]"
-                            onClick={() => window.location.href = `/blog/${blog.id}`}
-                        >
-                            <img loading="lazy" src={blog.image} alt={blog.title} className="rounded-md mb-4" />
-                            <h2 className="text-2xl font-semibold">{blog.title}</h2>
-                            <p className="text-gray-400 mt-2">{blog.description}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-gray-400 text-center mt-6">No blogs found in this category.</p>
-                )}
-            </div>
-
-            {/* Right Arrow */}
-            <button 
-                onClick={scrollRight} 
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full shadow-lg hover:bg-gray-600 transition"
-            >
-                →
-            </button>
-        </div>
+            {/* Render BlogDetails Modal */}
+            {openModal.state && (
+                <BlogDetails 
+                    openModal={openModal} 
+                    setOpenModal={setOpenModal} 
+                />
+            )}
+        </Container>
     );
-}
+};
 
-export default BlogPage;
+export default Blog;

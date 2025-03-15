@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./*"]
     },
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -14,6 +14,6 @@
     "allowJs": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

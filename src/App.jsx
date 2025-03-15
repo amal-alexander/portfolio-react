@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
-import { SpeedInsights } from "@vercel/speed-insights/react";
+import { injectSpeedInsights } from "@vercel/speed-insights"; // ✅ Correct import
 
 // Theme
 import { darkTheme, lightTheme } from './utils/Themes';
 import './App.css';
+
+// ✅ Inject Speed Insights (DO NOT use it as a component)
+injectSpeedInsights();
 
 // Components
 import Navbar from "./components/Navbar";
@@ -19,14 +22,11 @@ import Footer from './components/Footer';
 import ProjectDetails from './components/ProjectDetails';
 import GithubStats from './components/GithubStats';
 import Socials from './components/Socials';
-import HeroBgAnimation from './components/HeroBgAnimation';
 import FAQ from './components/FAQ/FAQ';
 import BlogDetail from './components/Blog/BlogDetail';
 import SEOTool from "./components/SEOTool";
 import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
-
-// Import BlogPage
 import BlogPage from './components/Blog/BlogPage';
 
 // Styled Components
@@ -107,8 +107,6 @@ const App = () => {
           </Body>
         </Router>
       </ThemeProvider>
-
-      <SpeedInsights />
     </HelmetProvider>
   );
 };

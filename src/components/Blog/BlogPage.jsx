@@ -1,123 +1,114 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import SectionContainer from '../common/SectionContainer';
+import BlogDetails from './BlogDetails'; // Import BlogDetails for modal
+
+const SectionContainer = styled.section`
+    padding: 80px 0;
+    background-color: ${({ theme }) => theme.background}; /* Overall background color */
+`;
 
 const Container = styled.div`
-    background: linear-gradient(343.07deg, rgba(132, 59, 206, 0.06) 5.71%, rgba(132, 59, 206, 0) 64.83%);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
-    z-index: 1;
     align-items: center;
-    padding: 50px 20px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 98%, 0 100%);
-`;
-
-const Wrapper = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 1350px;
-    padding: 10px 0;
-    gap: 12px;
-`;
-
-const Title = styled.div`
-    font-size: 42px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text_primary};
-    text-align: center;
-    margin: 20px 0;
-`;
-
-const Desc = styled.div`
-    font-size: 16px;
-    color: ${({ theme }) => theme.text_secondary};
-    text-align: center;
-`;
-
-const ToggleButtonGroup = styled.div`
-    display: flex;
-    gap: 12px;
-    margin: 20px 0;
-`;
-
-const ToggleButton = styled.div`
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: ${({ active, theme }) => (active ? theme.primary + 20 : theme.card)};
-    color: ${({ active, theme }) => (active ? theme.text_primary : theme.text_secondary)};
-    &:hover {
-        background-color: ${({ active, theme }) => (active ? theme.primary + 30 : theme.primary + 10)};
-    }
-`;
-
-const SliderContainer = styled.div`
-    position: relative;
-    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
 `;
 
-const SliderButton = styled.button`
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: ${({ theme }) => theme.card};
+const Wrapper = styled.div`
+    text-align: center;
+    width: 100%;
+`;
+
+const Title = styled(motion.h2)`
+    font-size: 42px;
     color: ${({ theme }) => theme.text_primary};
-    padding: 12px;
-    border-radius: 50%;
-    border: none;
+
+    @media (max-width: 768px) {
+        font-size: 32px;
+    }
+`;
+
+const Desc = styled(motion.p)`
+    font-size: 18px;
+    max-width: 600px;
+    color: ${({ theme }) => theme.text_secondary};
+    margin-bottom: 40px; /* Add margin for spacing */
+    text-align: center; /* Center align text */
+`;
+
+const ToggleButtonGroup = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+`;
+
+const ToggleButton = styled(motion.div)`
+    padding: 10px 20px;
+    border-radius: 12px;
     cursor: pointer;
-    z-index: 2;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    background-color: ${({ $active, theme }) => ($active ? theme.primary + 20 : theme.card)};
+    color: ${({ $active, theme }) => ($active ? theme.text_primary : theme.text_secondary)};
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin: 0 10px; /* Add margin for spacing between buttons */
 
     &:hover {
-        background: ${({ theme }) => theme.card_light};
+        background-color: ${({ $active, theme }) => ($active ? theme.primary + 30 : theme.primary + 10)};
+        transform: scale(1.05);
     }
+`;
 
-    ${({ direction }) => (direction === 'left' ? 'left: 0;' : 'right: 0;')}
+const SliderContainer = styled.div`
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+`;
+
+const SliderButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: ${({ theme }) => theme.text_primary};
+    padding: 0 10px; /* Add padding for better button spacing */
+`;
+
+const BlogPostContainer = styled.div`
+    display: flex;
+    gap: 20px; /* Space between blog posts */
+    overflow: hidden;
+    justify-content: center; /* Center the posts */
 `;
 
 const BlogPost = styled(motion.div)`
-    background-color: ${({ theme }) => theme.card};
-    width: 300px;
-    border-radius: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     padding: 20px;
-    color: ${({ theme }) => theme.text_primary};
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
-    }
+    min-width: 250px;
+    max-width: 300px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
+    background-color: ${({ theme }) => theme.card}; /* Ensure background follows theme */
+    color: ${({ theme }) => theme.text_primary}; /* Ensure text matches theme */
+    text-align: left; /* Align text to left for better readability */
 `;
 
-const PostTitle = styled.h2`
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 10px;
+const PostTitle = styled.h3`
+    color: inherit; /* Inherit color from BlogPost */
+    margin: 0 0 10px; /* Space below title */
 `;
 
 const PostContent = styled.p`
-    font-size: 16px;
-    color: ${({ theme }) => theme.text_secondary};
+    color: inherit; /* Inherit color from BlogPost */
+    margin: 10px 0;
 `;
 
 const PostDate = styled.span`
-    font-size: 14px;
-    color: ${({ theme }) => theme.text_secondary};
-    margin-top: 8px;
+    color: ${({ theme }) => theme.text_secondary}; /* Date color */
+    font-size: 0.8em;
 `;
 
 const Blog = () => {
@@ -127,9 +118,9 @@ const Blog = () => {
     const [toggle, setToggle] = useState('all');
     const postsPerPage = 3;
     const [currentPage, setCurrentPage] = useState(0);
+    const [openModal, setOpenModal] = useState({ state: false, blog: null });
 
     useEffect(() => {
-        // Use local data or fetch from an API
         import('../../data/blogPosts').then(module => {
             setPosts(module.default);
             setLoading(false);
@@ -140,51 +131,84 @@ const Blog = () => {
     }, []);
 
     const filteredPosts = toggle === 'all' ? posts : posts.filter(post => post.category === toggle);
-    const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+    const totalPages = Math.ceil(filteredPosts.length / postsPerPage); // Using Math.ceil for correct pagination logic
     const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
     const nextPage = () => {
-        setCurrentPage((prev) => (prev + 1) % totalPages);
+        setCurrentPage(prev => (prev + 1) % totalPages);
     };
 
     const prevPage = () => {
-        setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+        setCurrentPage(prev => (prev - 1 + totalPages) % totalPages);
+    };
+
+    const openBlogDetails = (blog) => {
+        setOpenModal({ state: true, blog });
     };
 
     return (
         <SectionContainer>
             <Container id="blog">
                 <Wrapper>
-                    <Title>My Blog</Title>
-                    <Desc>Explore my thoughts and insights on various topics in technology and development.</Desc>
+                    <Title initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
+                        My Blog
+                    </Title>
+                    <Desc initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
+                        Explore insights on various topics in technology and development.
+                    </Desc>
+
                     <ToggleButtonGroup>
                         {['all', 'tech', 'development', 'career'].map(category => (
-                            <ToggleButton key={category} active={toggle === category} onClick={() => setToggle(category)}>
+                            <ToggleButton 
+                                key={category} 
+                                $active={toggle === category} 
+                                onClick={() => setToggle(category)}
+                                whileHover={{ scale: 1.05 }} 
+                                whileTap={{ scale: 0.95 }}
+                            >
                                 {category.toUpperCase()}
                             </ToggleButton>
                         ))}
                     </ToggleButtonGroup>
+
                     <SliderContainer>
-                        <SliderButton direction="left" onClick={prevPage}>&lt;</SliderButton>
-                        <div style={{ display: 'flex', gap: '20px', overflow: 'hidden' }}>
-                            {loading ? (
-                                <div>Loading...</div>
-                            ) : error ? (
-                                <div>{error}</div>
-                            ) : (
-                                currentPosts.map((post, index) => (
-                                    <BlogPost key={post.id || index} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3, delay: index * 0.1 }}>
-                                        <PostTitle>{post.title}</PostTitle>
-                                        <PostContent>{post.content}</PostContent>
-                                        <PostDate>{new Date(post.createdAt).toLocaleDateString()}</PostDate>
-                                    </BlogPost>
-                                ))
-                            )}
-                        </div>
-                        <SliderButton direction="right" onClick={nextPage}>&gt;</SliderButton>
+                        <SliderButton onClick={prevPage} aria-label="previous page"><FaChevronLeft /></SliderButton>
+                        <BlogPostContainer>
+                            <AnimatePresence>
+                                {loading ? (
+                                    <div>Loading...</div>
+                                ) : error ? (
+                                    <div>{error}</div>
+                                ) : (
+                                    currentPosts.map((post, index) => (
+                                        <BlogPost
+                                            key={post.id || index}
+                                            initial={{ opacity: 0, scale: 0.9 }} 
+                                            animate={{ opacity: 1, scale: 1 }} 
+                                            exit={{ opacity: 0, scale: 0.9 }} 
+                                            transition={{ duration: 0.5 }}
+                                            onClick={() => openBlogDetails(post)}
+                                        >
+                                            <PostTitle>{post.title}</PostTitle>
+                                            <PostContent>{post.content.substring(0, 100)}...</PostContent>
+                                            <PostDate>{new Date(post.createdAt).toLocaleDateString()}</PostDate>
+                                        </BlogPost>
+                                    ))
+                                )}
+                            </AnimatePresence>
+                        </BlogPostContainer>
+                        <SliderButton onClick={nextPage} aria-label="next page"><FaChevronRight /></SliderButton>
                     </SliderContainer>
                 </Wrapper>
             </Container>
+
+            {/* Render BlogDetails Modal */}
+            {openModal.state && (
+                <BlogDetails 
+                    openModal={openModal} 
+                    setOpenModal={setOpenModal} 
+                />
+            )}
         </SectionContainer>
     );
 };

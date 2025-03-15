@@ -37,3 +37,7 @@ body {
     }
 }
 
+/* Tailwind CSS directives should come after your custom styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

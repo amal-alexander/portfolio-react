@@ -15,30 +15,32 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     overflow-y: auto;
-    transition: all 0.5s ease;
 `;
 
 const Wrapper = styled.div`
     max-width: 800px;
     width: 90%;
     border-radius: 16px;
-    margin: 20px;
     background-color: ${({ theme }) => theme.card};
     color: ${({ theme }) => theme.text_primary};
     padding: 20px;
-    display: flex;
-    flex-direction: column;
     position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); // Shadow for depth
+    
+    @media (max-width: 600px) {
+        padding: 16px; // Reduced padding for smaller screens
+    }
 `;
 
 const Title = styled.h1`
     font-size: 28px;
     font-weight: 600;
     color: ${({ theme }) => theme.text_primary};
-    margin: 8px 6px 0px 6px;
-    @media only screen and (max-width: 600px) {
-        font-size: 24px;
-        margin: 6px 6px 0px 6px;
+    margin: 12px 0; // Standardized margin
+
+    @media (max-width: 600px) {
+        font-size: 24px; // Smaller font size for mobile
+        margin: 8px 0; // Adjusted margin for smaller screens
     }
 `;
 
@@ -46,7 +48,7 @@ const MetaData = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 8px 6px;
+    margin: 12px 0; // Standardized margin
     color: ${({ theme }) => theme.text_secondary};
     font-size: 14px;
 
@@ -55,18 +57,23 @@ const MetaData = styled.div`
         align-items: center;
         gap: 4px;
     }
+
+    @media (max-width: 600px) {
+        flex-direction: column; // Stack metadata on smaller screens
+        align-items: flex-start; // Align items to start for better spacing
+    }
 `;
 
 const Content = styled.div`
     font-size: 16px;
     line-height: 1.8;
     color: ${({ theme }) => theme.text_primary};
-    margin: 12px 6px;
-    
+    margin: 12px 0; // Standardized margin
+
     & img {
         max-width: 100%;
         border-radius: 8px;
-        margin: 20px 0;
+        margin: 20px 0; // Consistent margin
     }
 
     & code {
@@ -83,8 +90,8 @@ const Content = styled.div`
         overflow-x: auto;
     }
 
-    @media only screen and (max-width: 600px) {
-        font-size: 14px;
+    @media (max-width: 600px) {
+        font-size: 14px; // Smaller font size for mobile
     }
 `;
 
@@ -92,7 +99,12 @@ const Tags = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 16px 6px;
+    margin: 16px 0; // Standardized margin
+    justify-content: center; // Center the tags
+
+    @media (max-width: 600px) {
+        justify-content: flex-start; // Align to the start on mobile
+    }
 `;
 
 const Tag = styled.span`
