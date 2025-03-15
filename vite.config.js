@@ -14,7 +14,7 @@ export default defineConfig({
     sourcemap: true,
     chunkSizeWarningLimit: 600, // Adjust the size limit for chunk size warnings
     rollupOptions: {
-      external: ["react-helmet-async"], // Ensure this module isn't bundled incorrectly
+      external: [], // Remove 'react-helmet-async' from external if you want to bundle it
       output: {
         manualChunks(id) {
           if (id.includes("node_modules/lottie-web")) {
