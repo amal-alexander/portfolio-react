@@ -1,10 +1,17 @@
-const mongoose = require('mongoose');
+// routes/posts.js
 
-const postSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    content: { type: String, required: true },
-    publishedDate: { type: Date, default: Date.now },
+const express = require('express');
+const router = express.Router();
+
+// Example dummy data for testing
+const posts = [
+    { id: 1, title: "First Post", content: "This is the first post content." },
+    { id: 2, title: "Second Post", content: "This is the second post content." },
+];
+
+// GET request to retrieve posts
+router.get('/', (req, res) => {
+    res.json(posts);
 });
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = router;

@@ -148,6 +148,7 @@ const SEOTool = () => {
         setLoading(true);
 
         try {
+            console.log('Attempting to connect to backend at http://localhost:5000/audit');
             const response = await fetch('http://localhost:5000/audit', {
                 method: 'POST',
                 headers: {
@@ -157,13 +158,16 @@ const SEOTool = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to analyze the URL. Please try again.');
+                const errorText = await response.text();
+                console.error('Server response not OK:', response.status, errorText);
+                throw new Error(`Failed to analyze the URL (Status: ${response.status}). Please try again.`);
             }
 
             const data = await response.json();
+            console.log('Received data from backend:', data);
             setResult(data);
         } catch (error) {
-            console.error(error);
+            console.error('Error in SEO Tool fetch:', error);
             setErrorMessage(error.message || 'Something went wrong. Please check the URL or try again.');
             setOpen(true);
         } finally {

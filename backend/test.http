@@ -1,0 +1,5 @@
+### Get all posts
+GET http://localhost:5000/api/posts
+
+### Get single post (replace ID with actual post ID)
+GET http://localhost:5000/api/posts/123456789

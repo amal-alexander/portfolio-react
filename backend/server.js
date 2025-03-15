@@ -3,67 +3,87 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
-const cheerio = require('cheerio'); // For parsing HTML
+const cheerio = require('cheerio');
+const mongoose = require('mongoose');
+require('dotenv').config(); // Load environment variables
+
+const postsRouter = require('./routes/posts');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/blog';
+
+// Connect to MongoDB
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('✅ Connected to MongoDB');
+}).catch((error) => {
+  console.error('❌ MongoDB connection error:', error);
+});
 
 // Middleware
-app.use(cors()); // Enable CORS
-app.use(bodyParser.json()); // Parse JSON bodies
+app.use(cors());
+app.use(bodyParser.json());
+
+// Mount the posts router
+app.use('/posts', postsRouter);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('Welcome to the SEO Audit API! Use POST /audit to analyze a URL.');
+  res.send('✅ Welcome to the SEO Audit API! Use POST /audit to analyze a URL.');
 });
 
 // Function to perform SEO audit analysis
 const performSEOAnalysis = async (url) => {
   try {
-    // Validate URL format
-    const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    // Improved URL validation
+    const urlPattern = /^(https?:\/\/)([\w.-]+)\.([a-z.]{2,6})([\/\w.-]*)*\/?$/i;
     if (!urlPattern.test(url)) {
-      throw new Error('Invalid URL format. Please provide a valid URL.');
+      throw new Error('Invalid URL format. Please provide a valid URL with http or https.');
     }
 
+    // Fetch page data
     const response = await axios.get(url);
     const html = response.data;
-    const $ = cheerio.load(html); // Load HTML with Cheerio for parsing
+    const $ = cheerio.load(html);
 
-    // Extract title, description, H1, canonical, etc.
-    const title = $('title').text() || 'No Title Found';
-    const description = $('meta[name="description"]').attr('content') || 'No Description Found';
-    const h1 = $('h1').first().text() || 'No H1 Found';
-    const canonical = $('link[rel="canonical"]').attr('href') || 'No Canonical Found';
-    const responseStatus = response.status; // HTTP response status
+    // Extract SEO-related information
+    const title = $('title').text().trim() || 'No Title Found';
+    const description = $('meta[name="description"]').attr('content')?.trim() || 'No Description Found';
+    const h1 = $('h1').first().text().trim() || 'No H1 Found';
+    const canonical = $('link[rel="canonical"]').attr('href')?.trim() || 'No Canonical Found';
+    const responseStatus = response.status;
 
-    // Count words
-    const text = $('body').text();
+    // Calculate text and word count
+    const text = $('body').text().replace(/\s+/g, ' ').trim();
     const wordCount = text.split(/\s+/).length;
-
-    // Count images
     const imgCount = $('img').length;
 
-    // Count internal and external links
+    // Extract internal and external links
     const internalLinks = [];
     const externalLinks = [];
 
     $('a').each(function () {
       const href = $(this).attr('href');
-      if (href && href.startsWith(url)) {
-        internalLinks.push(href);
-      } else {
-        externalLinks.push(href);
+      if (href) {
+        const absoluteUrl = new URL(href, url).href;
+        if (absoluteUrl.startsWith(url)) {
+          internalLinks.push(absoluteUrl);
+        } else {
+          externalLinks.push(absoluteUrl);
+        }
       }
     });
 
     return {
       url,
+      responseStatus,
       title,
       description,
       h1,
       canonical,
-      responseStatus,
       wordCount,
       imgCount,
       internalLinksCount: internalLinks.length,
@@ -72,7 +92,7 @@ const performSEOAnalysis = async (url) => {
       externalLinks,
     };
   } catch (error) {
-    console.error('Error fetching data:', error.message);
+    console.error('❌ Error fetching data:', error.message);
     throw new Error(`Failed to fetch data from the provided URL: ${error.message}`);
   }
 };
@@ -81,7 +101,6 @@ const performSEOAnalysis = async (url) => {
 app.post('/audit', async (req, res) => {
   const { url } = req.body;
 
-  // Validate the request body
   if (!url) {
     return res.status(400).json({ error: 'URL is required.' });
   }
@@ -96,5 +115,5 @@ app.post('/audit', async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`🚀 Server is running at http://localhost:${PORT}`);
 });

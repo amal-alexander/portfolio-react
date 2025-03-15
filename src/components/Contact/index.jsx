@@ -164,21 +164,21 @@ const Contact = () => {
 
     return (
         <SectionContainer>
-            <Container id="contact">
+            <Container id="socials">
                 <Wrapper>
                     <Title
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Contact
+                        My Socials
                     </Title>
                     <Desc
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        Feel free to reach out to me for any questions or opportunities!
+                        Connect with me on social media or drop me a message!
                     </Desc>
                     <ContactForm
                         ref={form}
