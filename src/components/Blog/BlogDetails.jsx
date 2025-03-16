@@ -1,8 +1,8 @@
-import React from 'react';
-import { CloseRounded, CalendarToday, Person, AccessTime } from '@mui/icons-material';
-import { Modal } from '@mui/material';
-import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
+import React from "react";
+import { CloseRounded } from "@mui/icons-material";
+import { Modal } from "@mui/material";
+import styled from "styled-components";
+import ReactMarkdown from "react-markdown";
 
 const Container = styled.div`
     width: 100%;
@@ -15,32 +15,30 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     overflow-y: auto;
+    transition: all 0.5s ease;
 `;
 
 const Wrapper = styled.div`
     max-width: 800px;
     width: 90%;
     border-radius: 16px;
+    margin: 20px;
     background-color: ${({ theme }) => theme.card};
     color: ${({ theme }) => theme.text_primary};
     padding: 20px;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); // Shadow for depth
-    
-    @media (max-width: 600px) {
-        padding: 16px; // Reduced padding for smaller screens
-    }
 `;
 
 const Title = styled.h1`
     font-size: 28px;
     font-weight: 600;
     color: ${({ theme }) => theme.text_primary};
-    margin: 12px 0; // Standardized margin
+    margin: 8px 6px 0px 6px;
 
     @media (max-width: 600px) {
-        font-size: 24px; // Smaller font size for mobile
-        margin: 8px 0; // Adjusted margin for smaller screens
+        font-size: 24px;
     }
 `;
 
@@ -48,39 +46,28 @@ const MetaData = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 12px 0; // Standardized margin
+    margin: 8px 6px;
     color: ${({ theme }) => theme.text_secondary};
     font-size: 14px;
-
-    & > div {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    @media (max-width: 600px) {
-        flex-direction: column; // Stack metadata on smaller screens
-        align-items: flex-start; // Align items to start for better spacing
-    }
 `;
 
 const Content = styled.div`
     font-size: 16px;
     line-height: 1.8;
     color: ${({ theme }) => theme.text_primary};
-    margin: 12px 0; // Standardized margin
+    margin: 12px 6px;
 
     & img {
         max-width: 100%;
         border-radius: 8px;
-        margin: 20px 0; // Consistent margin
+        margin: 20px 0;
     }
 
     & code {
         background: ${({ theme }) => theme.bgLight};
         padding: 2px 6px;
         border-radius: 4px;
-        font-family: 'Courier New', monospace;
+        font-family: "Courier New", monospace;
     }
 
     & pre {
@@ -89,37 +76,15 @@ const Content = styled.div`
         border-radius: 8px;
         overflow-x: auto;
     }
-
-    @media (max-width: 600px) {
-        font-size: 14px; // Smaller font size for mobile
-    }
-`;
-
-const Tags = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0; // Standardized margin
-    justify-content: center; // Center the tags
-
-    @media (max-width: 600px) {
-        justify-content: flex-start; // Align to the start on mobile
-    }
-`;
-
-const Tag = styled.span`
-    background-color: ${({ theme }) => theme.primary + 20};
-    color: ${({ theme }) => theme.primary};
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 14px;
 `;
 
 const BlogDetails = ({ openModal, setOpenModal }) => {
-    const blog = openModal?.blog;
+    const post = openModal?.blog;
+
+    if (!post) return null;
 
     return (
-        <Modal open={true} onClose={() => setOpenModal({ state: false, blog: null })}>
+        <Modal open={openModal.state} onClose={() => setOpenModal({ state: false, blog: null })}>
             <Container>
                 <Wrapper>
                     <CloseRounded
@@ -128,48 +93,20 @@ const BlogDetails = ({ openModal, setOpenModal }) => {
                             top: "10px",
                             right: "20px",
                             cursor: "pointer",
+                            color: "inherit", // Keep it adaptive to theme
                         }}
                         onClick={() => setOpenModal({ state: false, blog: null })}
                     />
                     
-                    <Title>{blog?.title}</Title>
+                    <Title>{post.title}</Title>
                     
                     <MetaData>
-                        <div>
-                            <Person fontSize="small" />
-                            {blog?.author}
-                        </div>
-                        <div>
-                            <CalendarToday fontSize="small" />
-                            {new Date(blog?.createdAt).toLocaleDateString()}
-                        </div>
-                        <div>
-                            <AccessTime fontSize="small" />
-                            {blog?.readTime}
-                        </div>
+                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                     </MetaData>
 
-                    {blog?.image && (
-                        <img 
-                            src={blog.image} 
-                            alt={blog.title}
-                            style={{ 
-                                width: '100%', 
-                                borderRadius: '8px', 
-                                marginTop: '12px' 
-                            }} 
-                        />
-                    )}
-
                     <Content>
-                        <ReactMarkdown>{blog?.content}</ReactMarkdown>
+                        <ReactMarkdown>{post.content}</ReactMarkdown>
                     </Content>
-
-                    <Tags>
-                        {blog?.tags.map((tag, index) => (
-                            <Tag key={index}>{tag}</Tag>
-                        ))}
-                    </Tags>
                 </Wrapper>
             </Container>
         </Modal>
