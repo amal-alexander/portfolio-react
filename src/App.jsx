@@ -28,6 +28,7 @@ import SEOTool from "./components/SEOTool";
 import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import BlogPage from './components/Blog/BlogPage';
+import TopicCluster from './components/TopicCluster/TopicCluster';  // Import TopicCluster Component
 
 // Styled Components
 const Body = styled.div`
@@ -85,14 +86,14 @@ const App = () => {
                     <GithubStats />
                     <Projects />
                     <Wrapper>
-                      <Socials />
+                      <TopicCluster />
                       <Contact />
                       <FAQ />
                     </Wrapper>
                   </>
                 } />
                 
-                {/* Blog Page Route */}
+                {/* Blog Page Routes */}
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/blog/:title" element={<BlogDetail />} />
 
@@ -100,6 +101,9 @@ const App = () => {
                 <Route path="/seo-tool" element={<SEOTool />} />
                 <Route path="/about-me" element={<AboutMe />} />
                 <Route path="/portfolio" element={<Portfolio />} />
+
+                {/* SEO Topic Clustering Tool Route */}
+                <Route path="/topic-cluster" element={<TopicCluster />} /> {/* Added this route for Topic Cluster */}
               </Routes>
             </MainContent>
 

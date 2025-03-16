@@ -41,16 +41,11 @@ const CardDate = styled.span`
 `;
 
 const BlogCard = ({ post }) => {
-    const formatDateString = (dateStr) => {
-        const date = new Date(dateStr);
-        return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString();
-    };
-
     return (
         <CardContainer animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ duration: 0.5 }}>
             <CardTitle>{post.title}</CardTitle>
             <CardContent>{post.content}</CardContent>
-            <CardDate>{formatDateString(post.createdAt)}</CardDate>
+            <CardDate>{new Date(post.createdAt).toLocaleDateString() || 'Invalid Date'}</CardDate>
         </CardContainer>
     );
 };

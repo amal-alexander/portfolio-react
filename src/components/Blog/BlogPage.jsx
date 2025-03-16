@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import BlogDetails from './BlogDetails'; // Import BlogDetails for modal
 
 const SectionContainer = styled.section`
@@ -16,6 +15,7 @@ const Container = styled.div`
     align-items: center;
     max-width: 1100px;
     margin: 0 auto; /* Center the max width in viewport */
+    padding: 0 20px;
 `;
 
 const Wrapper = styled.div`
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const Title = styled(motion.h2)`
     font-size: 42px;
     color: ${({ theme }) => theme.text_primary};
-
+    margin-bottom: 10px; /* Reduced margin */
     @media (max-width: 768px) {
         font-size: 32px;
     }
@@ -42,54 +42,64 @@ const Desc = styled(motion.p)`
 
 const ToggleButtonGroup = styled.div`
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    justify-content: flex-start; /* Align buttons to the start */
+    gap: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding-bottom: 10px; /* Reduced padding to make it tighter */
+    width: 100%;
+    margin-bottom: 10px; /* Reduced margin to reduce the space below the tabs */
+    flex-wrap: nowrap;
+    scroll-snap-type: x mandatory; /* Smooth snap scrolling */
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+
+    /* Hide Scrollbar */
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    ::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+    }
+
+    @media (max-width: 768px) {
+        gap: 8px; /* Reduce gap between buttons on mobile */
+    }
 `;
 
 const ToggleButton = styled(motion.div)`
-    padding: 10px 20px;
+    padding: 8px 16px; /* Adjusted padding */
     border-radius: 12px;
     cursor: pointer;
     background-color: ${({ $active, theme }) => ($active ? theme.primary + 20 : theme.card)};
     color: ${({ $active, theme }) => ($active ? theme.text_primary : theme.text_secondary)};
     transition: background-color 0.3s ease, transform 0.3s ease;
-    margin: 0 10px;
+    white-space: nowrap;
+    min-width: 80px; /* Reduced minimum width for mobile */
+    flex-shrink: 0;
+    scroll-snap-align: start; /* Align each tab to the start when scrolling */
+    font-size: 14px; /* Reduced font size for mobile */
 
     &:hover {
         background-color: ${({ $active, theme }) => ($active ? theme.primary + 30 : theme.primary + 10)};
         transform: scale(1.05);
     }
-`;
 
-const SliderContainer = styled.div`
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-`;
-
-const SliderButton = styled.button`
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    color: ${({ theme }) => theme.text_primary};
-    padding: 0 10px; /* Add padding for better button spacing */
+    @media (max-width: 768px) {
+        padding: 6px 12px; /* Further reduce padding for mobile */
+        font-size: 12px; /* Smaller font size for mobile */
+    }
 `;
 
 const BlogPostContainer = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px; /* Space between blog posts */
-    overflow: hidden;
-    justify-content: center; /* Center the posts */
+    width: 100%;
+    padding: 20px;
 `;
 
 const BlogPost = styled(motion.div)`
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
-    min-width: 250px;
-    max-width: 300px;
     box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
     background-color: ${({ theme }) => theme.card}; /* Ensure background follows theme */
     color: ${({ theme }) => theme.text_primary}; /* Ensure text matches theme */
@@ -115,9 +125,7 @@ const Blog = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [toggle, setToggle] = useState('all');
-    const postsPerPage = 3;
-    const [currentPage, setCurrentPage] = useState(0);
+    const [toggle, setToggle] = useState('all'); // Ensure 'all' tab is selected by default
     const [openModal, setOpenModal] = useState({ state: false, blog: null });
 
     useEffect(() => {
@@ -131,16 +139,6 @@ const Blog = () => {
     }, []);
 
     const filteredPosts = toggle === 'all' ? posts : posts.filter(post => post.category === toggle);
-    const totalPages = Math.ceil(filteredPosts.length / postsPerPage); // Using Math.ceil for correct pagination logic
-    const currentPosts = filteredPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
-
-    const nextPage = () => {
-        setCurrentPage(prev => (prev + 1) % totalPages);
-    };
-
-    const prevPage = () => {
-        setCurrentPage(prev => (prev - 1 + totalPages) % totalPages);
-    };
 
     const openBlogDetails = (blog) => {
         setOpenModal({ state: true, blog });
@@ -171,34 +169,28 @@ const Blog = () => {
                         ))}
                     </ToggleButtonGroup>
 
-                    <SliderContainer>
-                        <SliderButton onClick={prevPage} aria-label="previous page"><FaChevronLeft /></SliderButton>
-                        <BlogPostContainer>
-                            <AnimatePresence>
-                                {loading ? (
-                                    <div>Loading...</div>
-                                ) : error ? (
-                                    <div>{error}</div>
-                                ) : (
-                                    currentPosts.map((post, index) => (
-                                        <BlogPost
-                                            key={post.id || index}
-                                            initial={{ opacity: 0, scale: 0.9 }} 
-                                            animate={{ opacity: 1, scale: 1 }} 
-                                            exit={{ opacity: 0, scale: 0.9 }} 
-                                            transition={{ duration: 0.5 }}
-                                            onClick={() => openBlogDetails(post)}
-                                        >
-                                            <PostTitle>{post.title}</PostTitle>
-                                            <PostContent>{post.content.substring(0, 100)}...</PostContent>
-                                            <PostDate>{new Date(post.createdAt).toLocaleDateString()}</PostDate>
-                                        </BlogPost>
-                                    ))
-                                )}
-                            </AnimatePresence>
-                        </BlogPostContainer>
-                        <SliderButton onClick={nextPage} aria-label="next page"><FaChevronRight /></SliderButton>
-                    </SliderContainer>
+                    <BlogPostContainer>
+                        {loading ? (
+                            <div>Loading...</div>
+                        ) : error ? (
+                            <div>{error}</div>
+                        ) : (
+                            filteredPosts.map((post, index) => (
+                                <BlogPost
+                                    key={post.id || index}
+                                    initial={{ opacity: 0, scale: 0.9 }} 
+                                    animate={{ opacity: 1, scale: 1 }} 
+                                    exit={{ opacity: 0, scale: 0.9 }} 
+                                    transition={{ duration: 0.5 }}
+                                    onClick={() => openBlogDetails(post)}
+                                >
+                                    <PostTitle>{post.title}</PostTitle>
+                                    <PostContent>{post.content.substring(0, 100)}...</PostContent>
+                                    <PostDate>{new Date(post.createdAt).toLocaleDateString()}</PostDate>
+                                </BlogPost>
+                            ))
+                        )}
+                    </BlogPostContainer>
                 </Wrapper>
             </Container>
 

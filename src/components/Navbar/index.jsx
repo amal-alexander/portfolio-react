@@ -11,7 +11,7 @@ const navItems = [
     { id: 'skills', label: 'Skills' },
     { id: 'experience', label: 'Experience' },
     { id: 'projects', label: 'Projects' },
-    { id: 'socials', label: 'Socials' },
+    { id: 'topic-cluster', label: 'Topic Cluster' },  // Updated ID for topic-cluster
     { id: 'contact', label: 'Contact' },
     { id: 'blog', label: 'Blog' }
 ];
@@ -110,7 +110,7 @@ const Navbar = ({ darkMode, setDarkMode, onScrollClick }) => {
     };
 
     const handleLinkClick = (e, id) => {
-        if (id === 'blog' || id === 'seo-tool') {
+        if (id === 'blog' || id === 'seo-tool' || id === 'topic-cluster') {
             setOpen(false);
             return; // Let these links navigate normally
         }
@@ -131,7 +131,7 @@ const Navbar = ({ darkMode, setDarkMode, onScrollClick }) => {
             {/* Desktop Navigation */}
             <NavItems>
                 {navItems.map(({ id, label }) => (
-                    id === 'blog' || id === 'seo-tool' ? (
+                    id === 'blog' || id === 'seo-tool' || id === 'topic-cluster' ? (
                         <NavLink key={id} to={`/${id}`}>
                             {label}
                         </NavLink>
@@ -152,7 +152,7 @@ const Navbar = ({ darkMode, setDarkMode, onScrollClick }) => {
                 <MobileMenu>
                     <CloseIcon onClick={() => setOpen(false)} />
                     {navItems.map(({ id, label }) => (
-                        id === 'blog' || id === 'seo-tool' ? (
+                        id === 'blog' || id === 'seo-tool' || id === 'topic-cluster' ? (
                             <NavLink key={id} to={`/${id}`}>
                                 {label}
                             </NavLink>

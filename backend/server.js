@@ -5,6 +5,8 @@ const cors = require('cors');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
+const puppeteer = require('puppeteer');
+const natural = require('natural');
 require('dotenv').config(); // Load environment variables
 
 const postsRouter = require('./routes/posts');
@@ -32,7 +34,7 @@ app.use('/posts', postsRouter);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('✅ Welcome to the SEO Audit API! Use POST /audit to analyze a URL.');
+  res.send('✅ Welcome to the SEO Audit and Clustering API! Use POST /audit to analyze a URL or GET /api/cluster to get topic clusters.');
 });
 
 // Function to perform SEO audit analysis
@@ -110,6 +112,48 @@ app.post('/audit', async (req, res) => {
     res.json(auditResult);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Function to scrape Google SERPs
+async function scrapeGoogleSERP(query) {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.goto(`https://www.google.com/search?q=${query}`);
+  const results = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll("h3")).map(h => h.innerText);
+  });
+  await browser.close();
+  return results;
+}
+
+// NLP-based clustering
+function generateTopicClusters(serpResults) {
+  const tokenizer = new natural.WordTokenizer();
+  const clusters = {};
+
+  serpResults.forEach(title => {
+    const tokens = tokenizer.tokenize(title.toLowerCase());
+    tokens.forEach(word => {
+      if (!clusters[word]) clusters[word] = [];
+      clusters[word].push(title);
+    });
+  });
+
+  return clusters;
+}
+
+// API route for getting topic clusters based on keyword
+app.get("/api/cluster", async (req, res) => {
+  const { keyword } = req.query;
+  if (!keyword) return res.status(400).json({ error: "Keyword is required" });
+
+  try {
+    const serpResults = await scrapeGoogleSERP(keyword);
+    const clusters = generateTopicClusters(serpResults);
+    res.json({ keyword, clusters });
+  } catch (error) {
+    res.status(500).json({ error: "Error generating clusters" });
   }
 });
 
