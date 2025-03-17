@@ -1,14 +1,22 @@
 const express = require('express');
-const BlogPost = require('../models/BlogPost');
+const BlogPost = require('../models/BlogPost'); // Import the BlogPost model
 
 const router = express.Router();
 
-// ✅ Create a new blog post
+// Create a new blog post
 router.post('/', async (req, res) => {
-    const { title, content, author, category } = req.body;
+    const { title, slug, content, category, author } = req.body;
+
+    // Log the request body for debugging
+    console.log('Request Body:', req.body);
+
+    // Check for missing required fields
+    if (!title || !content || !category || !author) {
+        return res.status(400).json({ error: 'Missing required fields: title, content, category, or author.' });
+    }
 
     try {
-        const newPost = new BlogPost({ title, content, author, category });
+        const newPost = new BlogPost({ title, slug, content, category, author });
         await newPost.save();
         res.status(201).json(newPost);
     } catch (error) {
@@ -16,7 +24,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// ✅ Get all blog posts
+// Get all blog posts
 router.get('/', async (req, res) => {
     try {
         const posts = await BlogPost.find();
@@ -26,10 +34,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ✅ Get a single blog post by ID
-router.get('/:id', async (req, res) => {
+// Get a single blog post by slug
+router.get('/:slug', async (req, res) => {
     try {
-        const post = await BlogPost.findById(req.params.id);
+        const post = await BlogPost.findOne({ slug: req.params.slug });
         if (!post) return res.status(404).json({ message: 'Post not found' });
         res.status(200).json(post);
     } catch (error) {
@@ -37,14 +45,13 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// ✅ Update a blog post by ID
+// Update a blog post by ID
 router.put('/:id', async (req, res) => {
-    const { title, content, author, category } = req.body;
-
+    const { title, slug, content, category, author } = req.body;
     try {
         const updatedPost = await BlogPost.findByIdAndUpdate(
             req.params.id,
-            { title, content, author, category },
+            { title, slug, content, category, author },
             { new: true }
         );
         if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
@@ -54,7 +61,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// ✅ Delete a blog post by ID
+// Delete a blog post by ID
 router.delete('/:id', async (req, res) => {
     try {
         const deletedPost = await BlogPost.findByIdAndDelete(req.params.id);

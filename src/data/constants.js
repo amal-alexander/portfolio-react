@@ -773,3 +773,25 @@ export const projects = [
         link: "https://github.com/SartHak-0-Sach/Finance-education_chatbot_application",
     }
 ];
+export const seoNews = [
+    {
+      title: 'March 2025 Core Update Rolling Out',
+      category: 'google',
+      description: 'Google confirms core update affecting search rankings across industries.',
+      link: 'https://blog.google.com/search-updates/march-2025',
+    },
+    {
+      title: 'Case Study: How Internal Linking Improved CTR by 30%',
+      category: 'case-studies',
+      description: 'A deep dive into how structured internal linking boosted traffic.',
+      link: 'https://example.com/case-study-internal-linking',
+    },
+    {
+      title: 'Top 5 SEO Tips for E-Commerce Sites',
+      category: 'tips',
+      description: 'Quick wins and long-term strategies to boost e-commerce visibility.',
+      link: 'https://example.com/ecommerce-seo-tips',
+    },
+    // ...more news
+  ];
+  

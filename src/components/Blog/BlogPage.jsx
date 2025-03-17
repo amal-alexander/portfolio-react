@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import BlogDetails from './BlogDetails'; // Import BlogDetails for modal
+import BlogDetails from './BlogDetails';
+import blogPosts from './blogPosts'; // Import the blogPosts data
 
 const SectionContainer = styled.section`
     padding: 80px 0;
-    background-color: ${({ theme }) => theme.background}; /* Overall background color */
+    background-color: ${({ theme }) => theme.background};
 `;
 
 const Container = styled.div`
@@ -14,19 +15,20 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     max-width: 1100px;
-    margin: 0 auto; /* Center the max width in viewport */
+    margin: 0 auto;
     padding: 0 20px;
 `;
 
 const Wrapper = styled.div`
-    text-align: center; /* Ensure text is centered */
+    text-align: center;
     width: 100%;
 `;
 
 const Title = styled(motion.h2)`
     font-size: 42px;
     color: ${({ theme }) => theme.text_primary};
-    margin-bottom: 10px; /* Reduced margin */
+    margin-bottom: 10px;
+
     @media (max-width: 768px) {
         font-size: 32px;
     }
@@ -34,48 +36,47 @@ const Title = styled(motion.h2)`
 
 const Desc = styled(motion.p)`
     font-size: 18px;
-    max-width: 600px; /* Limit the width for better readability */
+    max-width: 600px;
     color: ${({ theme }) => theme.text_secondary};
-    margin: 20px auto 40px; /* Center the description with auto margins */
-    text-align: center; /* Center align text */
+    margin: 20px auto 40px;
+    text-align: center;
 `;
 
 const ToggleButtonGroup = styled.div`
     display: flex;
-    justify-content: flex-start; /* Align buttons to the start */
+    justify-content: flex-start;
     gap: 10px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    padding-bottom: 10px; /* Reduced padding to make it tighter */
+    overflow-x: auto;
+    padding-bottom: 10px;
     width: 100%;
-    margin-bottom: 10px; /* Reduced margin to reduce the space below the tabs */
+    margin-bottom: 10px;
     flex-wrap: nowrap;
-    scroll-snap-type: x mandatory; /* Smooth snap scrolling */
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
 
-    /* Hide Scrollbar */
-    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     ::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+        display: none;
     }
 
     @media (max-width: 768px) {
-        gap: 8px; /* Reduce gap between buttons on mobile */
+        gap: 8px;
     }
 `;
 
 const ToggleButton = styled(motion.div)`
-    padding: 8px 16px; /* Adjusted padding */
+    padding: 8px 16px;
     border-radius: 12px;
     cursor: pointer;
     background-color: ${({ $active, theme }) => ($active ? theme.primary + 20 : theme.card)};
     color: ${({ $active, theme }) => ($active ? theme.text_primary : theme.text_secondary)};
     transition: background-color 0.3s ease, transform 0.3s ease;
     white-space: nowrap;
-    min-width: 80px; /* Reduced minimum width for mobile */
+    min-width: 80px;
     flex-shrink: 0;
-    scroll-snap-align: start; /* Align each tab to the start when scrolling */
-    font-size: 14px; /* Reduced font size for mobile */
+    scroll-snap-align: start;
+    font-size: 14px;
 
     &:hover {
         background-color: ${({ $active, theme }) => ($active ? theme.primary + 30 : theme.primary + 10)};
@@ -83,15 +84,15 @@ const ToggleButton = styled(motion.div)`
     }
 
     @media (max-width: 768px) {
-        padding: 6px 12px; /* Further reduce padding for mobile */
-        font-size: 12px; /* Smaller font size for mobile */
+        padding: 6px 12px;
+        font-size: 12px;
     }
 `;
 
 const BlogPostContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px; /* Space between blog posts */
+    gap: 20px;
     width: 100%;
     padding: 20px;
 `;
@@ -101,41 +102,35 @@ const BlogPost = styled(motion.div)`
     border-radius: 8px;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0 2px 5px;
-    background-color: ${({ theme }) => theme.card}; /* Ensure background follows theme */
-    color: ${({ theme }) => theme.text_primary}; /* Ensure text matches theme */
-    text-align: left; /* Align text to left for better readability */
+    background-color: ${({ theme }) => theme.card};
+    color: ${({ theme }) => theme.text_primary};
 `;
 
 const PostTitle = styled.h3`
-    color: inherit; /* Inherit color from BlogPost */
-    margin: 0 0 10px; /* Space below title */
+    color: inherit;
+    margin: 0 0 10px;
 `;
 
 const PostContent = styled.p`
-    color: inherit; /* Inherit color from BlogPost */
+    color: inherit;
     margin: 10px 0;
 `;
 
 const PostDate = styled.span`
-    color: ${({ theme }) => theme.text_secondary}; /* Date color */
+    color: ${({ theme }) => theme.text_secondary};
     font-size: 0.8em;
 `;
 
 const Blog = () => {
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); // No need for loading state
     const [error, setError] = useState(null);
-    const [toggle, setToggle] = useState('all'); // Ensure 'all' tab is selected by default
+    const [toggle, setToggle] = useState('all');
     const [openModal, setOpenModal] = useState({ state: false, blog: null });
 
+    // Use the blogPosts data as the initial state
     useEffect(() => {
-        import('../../data/blogPosts').then(module => {
-            setPosts(module.default);
-            setLoading(false);
-        }).catch(err => {
-            setError('Failed to load blog posts');
-            setLoading(false);
-        });
+        setPosts(blogPosts); // Set posts directly from blogPosts
     }, []);
 
     const filteredPosts = toggle === 'all' ? posts : posts.filter(post => post.category === toggle);
@@ -170,25 +165,23 @@ const Blog = () => {
                     </ToggleButtonGroup>
 
                     <BlogPostContainer>
-                        {loading ? (
-                            <div>Loading...</div>
-                        ) : error ? (
-                            <div>{error}</div>
-                        ) : (
+                        {filteredPosts.length > 0 ? (
                             filteredPosts.map((post, index) => (
                                 <BlogPost
-                                    key={post.id || index}
-                                    initial={{ opacity: 0, scale: 0.9 }} 
-                                    animate={{ opacity: 1, scale: 1 }} 
-                                    exit={{ opacity: 0, scale: 0.9 }} 
+                                    key={post.slug || index}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.5 }}
                                     onClick={() => openBlogDetails(post)}
                                 >
                                     <PostTitle>{post.title}</PostTitle>
                                     <PostContent>{post.content.substring(0, 100)}...</PostContent>
-                                    <PostDate>{new Date(post.createdAt).toLocaleDateString()}</PostDate>
+                                    <PostDate>{new Date(post.date).toLocaleDateString()}</PostDate>
                                 </BlogPost>
                             ))
+                        ) : (
+                            <div>No blog posts available.</div>
                         )}
                     </BlogPostContainer>
                 </Wrapper>
@@ -196,10 +189,7 @@ const Blog = () => {
 
             {/* Render BlogDetails Modal */}
             {openModal.state && (
-                <BlogDetails 
-                    openModal={openModal} 
-                    setOpenModal={setOpenModal} 
-                />
+                <BlogDetails openModal={openModal} setOpenModal={setOpenModal} />
             )}
         </SectionContainer>
     );

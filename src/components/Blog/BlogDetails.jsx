@@ -1,36 +1,51 @@
-// src/components/Blog/BlogDetail.jsx
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getPosts } from "../../api"; // Adjust the path based on your structure
+import React from 'react';
+import styled from 'styled-components';
 
-const BlogDetail = () => {
-    const { title } = useParams(); // Assuming title is being used from the route
-    const [post, setPost] = useState(null);
-    const [error, setError] = useState(null);
+const Modal = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 600px;
+    width: 90%;
+`;
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const posts = await getPosts();
-                const foundPost = posts.find((p) => p.title === title); // Match based on title
-                setPost(foundPost);
-            } catch (error) {
-                setError('Error fetching post');
-            }
-        };
-        fetchPosts();
-    }, [title]);
+const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+`;
 
-    if (error) return <div>{error}</div>;
-    if (!post) return <div>Loading...</div>;
+const BlogDetails = ({ openModal, setOpenModal }) => {
+    const { state, blog } = openModal;
+
+    if (!state || !blog) return null; // Ensure modal isn't open without data
 
     return (
-        <div>
-            <h1>{post.title}</h1>
-            <p>{post.content}</p>
-            <p><strong>Author: {post.author}</strong></p>
-        </div>
+        <>
+            <ModalOverlay onClick={() => setOpenModal({ state: false, blog: null })} />
+            <Modal>
+                <h2>{blog.title}</h2>
+                {/* Render blog content dynamically */}
+                <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                <small>
+                    By {blog.author} on {new Date(blog.date).toLocaleDateString()}
+                </small>
+                <button onClick={() => setOpenModal({ state: false, blog: null })}>
+                    Close
+                </button>
+            </Modal>
+        </>
     );
 };
 
-export default BlogDetail;
+export default BlogDetails;

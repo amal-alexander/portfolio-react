@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
-import { injectSpeedInsights } from "@vercel/speed-insights"; // ✅ Correct import
-
-// Theme Configurations
-import { darkTheme, lightTheme } from './utils/Themes';
+import { injectSpeedInsights } from "@vercel/speed-insights"; // Correct import
+import { darkTheme, lightTheme } from './utils/Themes'; // Theme Configurations
 import './App.css';
-
-// Inject Speed Insights (DO NOT use it as a component)
-injectSpeedInsights();
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 // Component Imports
+import SEOLatestNews from './components/SEOLatestNews';
 import Navbar from "./components/Navbar";
 import Hero from "./components/HeroSection";
 import Skills from "./components/Skills";
@@ -29,6 +27,9 @@ import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import BlogPage from './components/Blog/BlogPage';
 import TopicCluster from './components/TopicCluster/TopicCluster';  // Import TopicCluster Component
+
+// Inject Speed Insights (DO NOT use it as a component)
+injectSpeedInsights();
 
 // Styled Components
 const Body = styled.div`
@@ -58,7 +59,7 @@ const MainContent = styled.div`
 `;
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(true); // State for theme
 
   return (
     <HelmetProvider>
@@ -76,6 +77,7 @@ const App = () => {
 
             <MainContent>
               <Routes>
+                {/* Home Route */}
                 <Route path="/" element={
                   <>
                     <Hero />
@@ -86,7 +88,7 @@ const App = () => {
                     <GithubStats />
                     <Projects />
                     <Wrapper>
-                      <TopicCluster />
+                      <SEOLatestNews /> {/* SEO Latest News Section */}
                       <Contact />
                       <FAQ />
                     </Wrapper>
