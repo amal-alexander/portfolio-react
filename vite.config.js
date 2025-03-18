@@ -6,7 +6,8 @@ export default defineConfig(({ mode }) => ({
   base: "/", // Adjust if deploying under a sub-path
   server: {
     port: 5000,
-    open: mode !== "production", // Avoid 'xdg-open' error on Vercel
+    strictPort: true, 
+    open: true,
     host: "0.0.0.0",
   },
   build: {
