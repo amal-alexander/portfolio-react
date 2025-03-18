@@ -1,38 +1,38 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: "/",
+  base: "/", // Adjust if deploying under a sub-path
   server: {
     port: 5000,
-    open: true,
+    open: mode !== "production", // Avoid 'xdg-open' error on Vercel
     host: "0.0.0.0",
   },
   build: {
     outDir: "dist",
     sourcemap: true,
-    chunkSizeWarningLimit: 600, // Adjust the size limit for chunk size warnings
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
-      external: [], // Remove 'react-helmet-async' from external if you want to bundle it
+      external: [], // Add any external libraries you want to exclude
       output: {
         manualChunks(id) {
           if (id.includes("node_modules/lottie-web")) {
-            return "lottie"; // Creates a separate chunk for lottie-web
+            return "lottie";
           }
           if (id.includes("node_modules/react-helmet-async")) {
-            return "helmet"; // Creates a chunk for react-helmet-async
+            return "helmet";
           }
           if (id.includes("node_modules")) {
-            return "vendor"; // Bundle all node_modules dependencies into "vendor"
+            return "vendor";
           }
         },
       },
     },
-    treeshake: true, // Optimize by removing unused code
+    treeshake: true,
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    minify: "esbuild", // Use esbuild for fast minification
+    minify: "esbuild",
   },
-});
+}));
