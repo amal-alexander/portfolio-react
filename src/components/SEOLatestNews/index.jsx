@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-// Styled Components
+// Styled Components (unchanged)
 const Section = styled.section`
   background: #0f0f1b;
   padding: 60px 20px;
@@ -31,8 +31,6 @@ const StyledSlider = styled(Slider)`
 
   .slick-prev,
   .slick-next {
-    width: 45px;
-    height: 45px;
     z-index: 10;
   }
 
@@ -53,16 +51,24 @@ const ArrowBtn = styled.button`
   place-items: center;
   cursor: pointer;
   position: absolute;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 5;
 
   &.prev {
-    left: -20px;
+    left: -50px;
+
+    @media (max-width: 768px) {
+      left: -25px;
+    }
   }
 
   &.next {
-    right: -20px;
+    right: -50px;
+
+    @media (max-width: 768px) {
+      right: -25px;
+    }
   }
 `;
 
@@ -150,17 +156,26 @@ const NextArrow = ({ onClick }) => (
 const SEOLatestNews = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const apiKey = '525e4da76446475a8c6d13b748da0768';
+  const [error, setError] = useState(null);
 
   const fetchArticles = async () => {
     try {
-      const res = await fetch(
-        `https://newsapi.org/v2/everything?q=seo&language=en&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`
+      const apiKey = import.meta.env.VITE_NEWS_API_KEY;
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(
+        `${apiUrl}/everything?q=SEO&apiKey=${apiKey}`
       );
-      const data = await res.json();
-      setArticles(data.articles);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setArticles(data.articles || []);
     } catch (err) {
-      console.error('Failed to fetch articles:', err);
+      setError('Failed to fetch articles. Please try again later.');
+      console.error('Error fetching articles:', err);
     } finally {
       setLoading(false);
     }
@@ -176,7 +191,7 @@ const SEOLatestNews = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    prevArrow: <PrevArrow />, 
+    prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
     responsive: [
       {
@@ -196,29 +211,45 @@ const SEOLatestNews = () => {
       <SliderWrapper>
         {loading ? (
           <p style={{ textAlign: 'center' }}>Loading...</p>
-        ) : (
+        ) : error ? (
+          <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>
+        ) : articles.length > 0 ? (
           <StyledSlider {...settings}>
-            {articles.slice(0, 6).map((article, idx) => (
+            {articles.slice(0, 6).map((article) => (
               <Card
-                key={idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: idx * 0.1 }}
+                key={article.url}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
               >
-                <CardImage src={article.urlToImage || 'https://via.placeholder.com/400x180?text=No+Image'} alt={article.title} />
+                <CardImage
+                  src={
+                    article.urlToImage ||
+                    'https://via.placeholder.com/400x180?text=No+Image'
+                  }
+                  alt={article.title}
+                />
                 <CardContent>
                   <TagList>
                     <Tag>SEO</Tag>
                     <Tag>News</Tag>
                   </TagList>
                   <CardTitle>{article.title}</CardTitle>
-                  <CardDesc>{article.description || 'No description available.'}</CardDesc>
-                  <CardDate>{new Date(article.publishedAt).toLocaleString()}</CardDate>
-                  <ViewBtn onClick={() => window.open(article.url, '_blank')}>Read Full News</ViewBtn>
+                  <CardDesc>
+                    {article.description || 'No description available.'}
+                  </CardDesc>
+                  <CardDate>
+                    {new Date(article.publishedAt).toLocaleString()}
+                  </CardDate>
+                  <ViewBtn onClick={() => window.open(article.url, '_blank')}>
+                    Read Full News
+                  </ViewBtn>
                 </CardContent>
               </Card>
             ))}
           </StyledSlider>
+        ) : (
+          <p style={{ textAlign: 'center' }}>No articles found.</p>
         )}
       </SliderWrapper>
     </Section>

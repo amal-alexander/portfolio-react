@@ -25,6 +25,9 @@ build
 .env.test.local
 .env.production.local
 
+# Coverage reports
+coverage
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -39,3 +42,9 @@ build
 # System
 .DS_Store
 Thumbs.db
+
+# Vercel
+.vercel
+
+# Tarballs
+*.tgz

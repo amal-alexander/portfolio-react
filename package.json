@@ -3,15 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "http://./",
   "scripts": {
     "dev": "vite",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "clean": "rimraf dist",
     "build": "vite build",
-    "preview": "vite preview",
-    "start": "node server.js"
+    "start": "vite preview"
   },
   "dependencies": {
     "@cloudinary/react": "^1.13.1",
@@ -25,13 +20,11 @@
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.8.3",
     "chart.js": "^4.4.8",
-    "cheerio": "^1.0.0",
     "express": "^4.21.2",
     "framer-motion": "^12.5.0",
     "jquery": "^3.7.1",
     "lottie-react": "^2.4.1",
     "natural": "^8.0.1",
-    "puppeteer": "^24.4.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "18.2.0",
@@ -57,15 +50,14 @@
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "gh-pages": "^6.1.1",
     "postcss": "^8.5.3",
-    "rimraf": "^5.0.1",
     "tailwindcss": "^4.0.14",
     "terser": "^5.39.0",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "cheerio": "^1.0.0",
+    "puppeteer": "^24.4.0"
   },
-  "description": "1. [🤖 Introduction](#-introduction) 2. [⚙️ Tech Stack](#%EF%B8%8F-tech-stack) 3. [📂 Project Structure](#-project-structure) 4. [🔋 Features](#-features) 5. [🤸 Quick Start](#-quick-start)    - [Prerequisites](#prerequisites)    - [Cloning the Repository](#cloning-the-repository)    - [Installation](#installation)    - [Running the Project](#running-the-project) 7. [🔗 Links](#-links) 8. [🚀 More](#-more)",
-  "main": "fix-imports.js",
+  "description": "Portfolio project built with React and Vite.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/amal-alexander/portfolio-react.git"
