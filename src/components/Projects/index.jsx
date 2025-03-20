@@ -98,16 +98,28 @@ const SliderContainer = styled.div`
     position: relative;
     width: 100%;
     max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto;
+    padding: 0 60px;
+
+    @media (max-width: 768px) {
+        padding: 0 40px;
+    }
 `;
 
 const CardContainer = styled(motion.div)`
     display: flex;
     gap: 28px;
-    padding: 20px;
-    overflow: hidden;
+    padding: 20px 0;
+    overflow: visible;
+    width: 100%;
+    justify-content: center;
+
     @media (max-width: 768px) {
-        flex-direction: column; /* Stack cards on small screens */
+        flex-direction: column;
+        align-items: center;
     }
 `;
 
@@ -123,16 +135,18 @@ const SliderButton = styled.button`
     cursor: pointer;
     z-index: 2;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 
     &:hover {
         background: ${({ theme }) => theme.card_light};
+        transform: translateY(-50%) scale(1.1);
     }
 
     ${props => props.direction === 'left' ? 'left: 0;' : 'right: 0;'}
 
     @media (max-width: 768px) {
         padding: 8px;
-        font-size: 14px; /* Adjust font size for mobile */
+        font-size: 14px;
     }
 `;
 

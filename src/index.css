@@ -1,6 +1,6 @@
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+    scroll-padding-top: 60px;
 }
 
 body {
@@ -20,9 +20,10 @@ body {
 #experience,
 #projects,
 #socials {
-    padding-top: 80px;
-    margin-top: -80px;
-    scroll-margin-top: 80px;
+    @apply px-4 md:px-6 lg:px-8;
+    padding-top: 60px;
+    margin-top: -60px;
+    scroll-margin-top: 60px;
 }
 
 #github {
@@ -33,11 +34,24 @@ body {
 
 @media (max-width: 768px) {
     #github {
-        padding: 60px 20px;
+        padding: 40px 16px;
+    }
+    html {
+        scroll-padding-top: 50px;
+    }
+    #about,
+    #skills,
+    #GithubStats,
+    #experience,
+    #projects,
+    #socials {
+        padding-top: 50px;
+        margin-top: -50px;
+        scroll-margin-top: 50px;
     }
 }
 
-/* Tailwind CSS directives should come after your custom styles */
+/* Tailwind CSS directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

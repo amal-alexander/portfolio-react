@@ -64,14 +64,12 @@ const ContactForm = styled(motion.form)`
     box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
     margin-top: 28px;
     gap: 12px;
-`
-
-const ContactTitle = styled(motion.div)`
-    font-size: 24px;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text_primary};
-`
+    @media (max-width: 768px) {
+        padding: 20px;
+        margin-top: 20px;
+        gap: 10px;
+    }
+`;
 
 const ContactInput = styled(motion.input)`
     flex: 1;
@@ -85,7 +83,11 @@ const ContactInput = styled(motion.input)`
     &:focus {
         border: 1px solid ${({ theme }) => theme.primary};
     }
-`
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 14px;
+    }
+`;
 
 const ContactInputMessage = styled(motion.textarea)`
     flex: 1;
@@ -96,19 +98,20 @@ const ContactInputMessage = styled(motion.textarea)`
     color: ${({ theme }) => theme.text_primary};
     border-radius: 12px;
     padding: 12px 16px;
+    min-height: 100px;
     &:focus {
         border: 1px solid ${({ theme }) => theme.primary};
     }
-`
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 14px;
+        min-height: 80px;
+    }
+`;
 
 const ContactButton = styled(motion.input)`
     width: 100%;
-    text-decoration: none;
     text-align: center;
-    background: hsla(271, 100%, 50%, 1);
-    background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
-    background: -moz-linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
-    background: -webkit-linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     padding: 13px 16px;
     margin-top: 2px;
     border-radius: 12px;
@@ -117,10 +120,22 @@ const ContactButton = styled(motion.input)`
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
+    background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     &:hover {
         transform: scale(1.05);
         transition: all 0.4s ease-in-out;
     }
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 14px;
+    }
+`;
+
+const ContactTitle = styled(motion.div)`
+    font-size: 24px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text_primary};
 `
 
 const Contact = () => {

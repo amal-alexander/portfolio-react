@@ -33,7 +33,7 @@ export const skills = [
             {
                 name: "React Js",
                 image:
-                    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K",
+                    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIHRyYW5zZm9ybT0icm90YXRlKDEyMCkiLz4KICA8L2c+Cjwvc3ZnPgo=",
             },
             {
                 name: "Redux",
@@ -73,7 +73,7 @@ export const skills = [
             {
                 name: "AngularJS",
                 image:
-                    "https://th.bing.com/th/id/OIP.OVUtPepwEqUuUIUtwO8lngHaH3?rs=1&pid=ImgDetMain",
+                    "https://th.bing.com/th/id/OIP.OVUtPepwEqUuUIW8lngHaH3?rs=1&pid=ImgDetMain",
             },
             {
                 name: "VueJS",
@@ -773,25 +773,34 @@ export const projects = [
         link: "https://github.com/SartHak-0-Sach/Finance-education_chatbot_application",
     }
 ];
+
 export const seoNews = [
     {
-      title: 'March 2025 Core Update Rolling Out',
-      category: 'google',
-      description: 'Google confirms core update affecting search rankings across industries.',
-      link: 'https://blog.google.com/search-updates/march-2025',
+        title: "Google's Latest Algorithm Update",
+        description: "Google has rolled out a new algorithm update focusing on user experience and content quality.",
+        link: "https://www.example.com/google-algorithm-update",
+        date: "2025-03-15",
+        image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=500&q=80"
     },
     {
-      title: 'Case Study: How Internal Linking Improved CTR by 30%',
-      category: 'case-studies',
-      description: 'A deep dive into how structured internal linking boosted traffic.',
-      link: 'https://example.com/case-study-internal-linking',
+        title: "SEO Trends for 2025",
+        description: "Discover the top SEO trends for 2025 and how to optimize your website for better rankings.",
+        link: "https://www.example.com/seo-trends-2025",
+        date: "2025-03-10",
+        image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=500&q=80"
     },
     {
-      title: 'Top 5 SEO Tips for E-Commerce Sites',
-      category: 'tips',
-      description: 'Quick wins and long-term strategies to boost e-commerce visibility.',
-      link: 'https://example.com/ecommerce-seo-tips',
+        title: "The Importance of Core Web Vitals",
+        description: "Learn why Core Web Vitals are crucial for SEO and how to improve your website's performance.",
+        link: "https://www.example.com/core-web-vitals",
+        date: "2025-03-05",
+        image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=500&q=80"
     },
-    // ...more news
-  ];
-  
+    {
+        title: "AI in SEO: The Future of Search Optimization",
+        description: "Explore how AI is transforming the SEO landscape and what it means for your strategy.",
+        link: "https://www.example.com/ai-in-seo",
+        date: "2025-03-01",
+        image: "https://images.unsplash.com/photo-1488229297570-58520851e868?w=500&q=80"
+    }
+];

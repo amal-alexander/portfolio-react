@@ -16,6 +16,12 @@ router.post('/', async (req, res) => {
     }
 
     try {
+        // Check if a post with the same slug already exists
+        const existingPost = await BlogPost.findOne({ slug });
+        if (existingPost) {
+            return res.status(400).json({ error: 'A post with this slug already exists.' });
+        }
+
         const newPost = new BlogPost({ title, slug, content, category, author });
         await newPost.save();
         res.status(201).json(newPost);
@@ -38,7 +44,9 @@ router.get('/', async (req, res) => {
 router.get('/:slug', async (req, res) => {
     try {
         const post = await BlogPost.findOne({ slug: req.params.slug });
-        if (!post) return res.status(404).json({ message: 'Post not found' });
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
         res.status(200).json(post);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -48,13 +56,27 @@ router.get('/:slug', async (req, res) => {
 // Update a blog post by ID
 router.put('/:id', async (req, res) => {
     const { title, slug, content, category, author } = req.body;
+
     try {
+        // Check if the post exists
+        const existingPost = await BlogPost.findById(req.params.id);
+        if (!existingPost) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check if the new slug conflicts with another post
+        if (slug && slug !== existingPost.slug) {
+            const slugConflict = await BlogPost.findOne({ slug });
+            if (slugConflict) {
+                return res.status(400).json({ error: 'A post with this slug already exists.' });
+            }
+        }
+
         const updatedPost = await BlogPost.findByIdAndUpdate(
             req.params.id,
             { title, slug, content, category, author },
-            { new: true }
+            { new: true, runValidators: true } // Ensure validators are run
         );
-        if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
         res.status(200).json(updatedPost);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -65,7 +87,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const deletedPost = await BlogPost.findByIdAndDelete(req.params.id);
-        if (!deletedPost) return res.status(404).json({ message: 'Post not found' });
+        if (!deletedPost) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
         res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });

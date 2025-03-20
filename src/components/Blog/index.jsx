@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BlogCard from './BlogCard';
-import BlogDetails from './BlogDetails'; // Import BlogDetails
+import BlogDetails from './BlogDetails';
 import { motion } from 'framer-motion';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import blogPosts from '../../data/blogPosts';
 
 // Styled Components
 const Container = styled.div`
@@ -78,26 +79,27 @@ const CardContainer = styled(motion.div)`
     overflow: hidden;
 `;
 
+const ErrorMessage = styled.div`
+    color: ${({ theme }) => theme.error || '#ff6b6b'};
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+`;
+
+const LoadingMessage = styled.div`
+    color: ${({ theme }) => theme.text_primary};
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+`;
+
 const Blog = () => {
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
-    const [openModal, setOpenModal] = useState({ state: false, blog: null }); // State for modal visibility
+    const [openModal, setOpenModal] = useState({ state: false, blog: null });
     const postsPerPage = 3;
 
-    useEffect(() => {
-        import('../../data/blogPosts').then(module => {
-            setPosts(module.default);
-            setLoading(false);
-        }).catch(err => {
-            setError('Failed to load blog posts');
-            setLoading(false);
-        });
-    }, []);
-
-    const totalPages = Math.ceil(posts.length / postsPerPage);
-    const currentPosts = posts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
+    const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+    const currentPosts = blogPosts.slice(currentPage * postsPerPage, (currentPage + 1) * postsPerPage);
 
     const nextPage = () => {
         setCurrentPage((prev) => (prev + 1) % totalPages);
@@ -127,19 +129,13 @@ const Blog = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        {loading ? (
-                            <div>Loading...</div>
-                        ) : error ? (
-                            <div>{error}</div>
-                        ) : (
-                            currentPosts.map((post, index) => (
-                                <BlogCard 
-                                    key={index} 
-                                    post={post} 
-                                    onClick={() => openBlogDetails(post)} // Pass blog post to the handler
-                                />
-                            ))
-                        )}
+                        {currentPosts.map((post, index) => (
+                            <BlogCard 
+                                key={index} 
+                                post={post} 
+                                onClick={() => openBlogDetails(post)}
+                            />
+                        ))}
                     </CardContainer>
                     <SliderButton direction="right" onClick={nextPage}>
                         <FaChevronRight />
@@ -147,7 +143,6 @@ const Blog = () => {
                 </SliderContainer>
             </Wrapper>
 
-            {/* Render BlogDetails Modal */}
             {openModal.state && (
                 <BlogDetails 
                     openModal={openModal} 

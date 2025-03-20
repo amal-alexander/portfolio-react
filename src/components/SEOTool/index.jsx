@@ -63,13 +63,10 @@ const SEOForm = styled(motion.form)`
     box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
     margin-top: 28px;
     gap: 12px;
-`;
-
-const SEOFormTitle = styled(motion.div)`
-    font-size: 24px;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text_primary};
+    @media (max-width: 768px) {
+        padding: 20px;
+        margin-top: 20px;
+    }
 `;
 
 const SEOInput = styled(motion.input)`
@@ -83,6 +80,10 @@ const SEOInput = styled(motion.input)`
     padding: 12px 16px;
     &:focus {
         border: 1px solid ${({ theme }) => theme.primary};
+    }
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 14px;
     }
 `;
 
@@ -101,6 +102,10 @@ const SEOButton = styled(motion.button)`
         transform: scale(1.05);
         transition: all 0.4s ease-in-out;
     }
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 14px;
+    }
 `;
 
 const ResultBox = styled(motion.div)`
@@ -111,8 +116,12 @@ const ResultBox = styled(motion.div)`
     margin-top: 20px;
     width: 95%;
     max-width: 600px;
-    font-family: 'Poppins', sans-serif; /* Add a modern font */
+    font-family: 'Poppins', sans-serif;
     color: ${({ theme }) => theme.text_primary};
+    @media (max-width: 768px) {
+        padding: 16px;
+        margin-top: 16px;
+    }
 `;
 
 const ResultTitle = styled.h3`

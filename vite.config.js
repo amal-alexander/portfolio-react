@@ -5,34 +5,37 @@ export default defineConfig({
   plugins: [react()],
   base: "/",
   server: {
-    port: 5000,
+    port: 5001,
     open: true,
     host: "0.0.0.0",
+    proxy: {
+      '/api': 'http://localhost:5000', // Proxy API requests to backend
+    },
   },
   build: {
     outDir: "dist",
     sourcemap: true,
     chunkSizeWarningLimit: 600, // Adjust the size limit for chunk size warnings
     rollupOptions: {
-      external: [], // Remove 'react-helmet-async' from external if you want to bundle it
+      external: [], // Keep external dependencies bundled
       output: {
         manualChunks(id) {
           if (id.includes("node_modules/lottie-web")) {
-            return "lottie"; // Creates a separate chunk for lottie-web
+            return "lottie"; // Separate chunk for lottie-web
           }
           if (id.includes("node_modules/react-helmet-async")) {
-            return "helmet"; // Creates a chunk for react-helmet-async
+            return "helmet"; // Separate chunk for react-helmet-async
           }
           if (id.includes("node_modules")) {
-            return "vendor"; // Bundle all node_modules dependencies into "vendor"
+            return "vendor"; // Bundle other node_modules dependencies
           }
         },
       },
     },
-    treeshake: true, // Optimize by removing unused code
+    treeshake: true, // Remove unused code for optimization
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    minify: "esbuild", // Use esbuild for fast minification
+    minify: "esbuild", // Fast minification using esbuild
   },
 });

@@ -3,13 +3,10 @@ import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
 import { injectSpeedInsights } from "@vercel/speed-insights"; // Correct import
-import { darkTheme, lightTheme } from './utils/Themes'; // Theme Configurations
-import './App.css';
+import { darkTheme, lightTheme } from "./utils/Themes";
+import "./App.css";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-// Component Imports
-import SEOLatestNews from './components/SEOLatestNews';
 import Navbar from "./components/Navbar";
 import Hero from "./components/HeroSection";
 import Skills from "./components/Skills";
@@ -26,7 +23,11 @@ import SEOTool from "./components/SEOTool";
 import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import BlogPage from './components/Blog/BlogPage';
-import TopicCluster from './components/TopicCluster/TopicCluster';  // Import TopicCluster Component
+import TopicCluster from './components/TopicCluster/TopicCluster';
+import NewsCard from "./components/NewsCard";  // Relative path
+import SEONews from "./components/SEONews";  // Relative path
+
+
 
 // Inject Speed Insights (DO NOT use it as a component)
 injectSpeedInsights();
@@ -88,7 +89,7 @@ const App = () => {
                     <GithubStats />
                     <Projects />
                     <Wrapper>
-                      <SEOLatestNews /> {/* SEO Latest News Section */}
+                      <SEONews /> 
                       <Contact />
                       <FAQ />
                     </Wrapper>
@@ -103,6 +104,7 @@ const App = () => {
                 <Route path="/seo-tool" element={<SEOTool />} />
                 <Route path="/about-me" element={<AboutMe />} />
                 <Route path="/portfolio" element={<Portfolio />} />
+                <Route path="/seo-news" element={<SEONews />} /> {/* New Route for SEONews Component */}
 
                 {/* SEO Topic Clustering Tool Route */}
                 <Route path="/topic-cluster" element={<TopicCluster />} /> {/* Added this route for Topic Cluster */}
