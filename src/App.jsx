@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from "styled-components";
-import { injectSpeedInsights } from "@vercel/speed-insights"; // Correct import
+import { injectSpeedInsights } from "@vercel/speed-insights";
 import { darkTheme, lightTheme } from "./utils/Themes";
 import "./App.css";
 import 'slick-carousel/slick/slick.css';
@@ -24,8 +24,9 @@ import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import BlogPage from './components/Blog/BlogPage';
 import TopicCluster from './components/TopicCluster/TopicCluster';
-import NewsCard from "./components/NewsCard";  // Relative path
-import SEONews from "./components/SEONews";  // Relative path
+import ContentSimilarity from './components/ContentSimilarity';
+import NewsCard from "./components/NewsCard";
+import SEONews from "./components/SEONews";
 
 
 
@@ -60,7 +61,7 @@ const MainContent = styled.div`
 `;
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(true); // State for theme
+  const [darkMode, setDarkMode] = useState(true);
 
   return (
     <HelmetProvider>
@@ -98,19 +99,20 @@ const App = () => {
                 
                 {/* Blog Page Routes */}
                 <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:title" element={<BlogDetail />} />
-
-                {/* Other Routes */}
+                <Route path="/blog/:id" element={<BlogDetail />} />
+                
+                {/* SEO Tool Routes */}
                 <Route path="/seo-tool" element={<SEOTool />} />
-                <Route path="/about-me" element={<AboutMe />} />
+                <Route path="/topic-cluster" element={<TopicCluster />} />
+                <Route path="/content-similarity" element={<ContentSimilarity />} />
+                
+                {/* Portfolio Route */}
                 <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/seo-news" element={<SEONews />} /> {/* New Route for SEONews Component */}
-
-                {/* SEO Topic Clustering Tool Route */}
-                <Route path="/topic-cluster" element={<TopicCluster />} /> {/* Added this route for Topic Cluster */}
+                
+                {/* About Route */}
+                <Route path="/about" element={<AboutMe />} />
               </Routes>
             </MainContent>
-
             <Footer />
           </Body>
         </Router>

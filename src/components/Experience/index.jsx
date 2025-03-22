@@ -114,14 +114,14 @@ const BulletPoint = styled.li`
 `;
 
 const CompanyLogo = styled.img`
-    width: ${props => props.main ? '120px' : '100px'};
+    width: ${props => props.main === "true" ? '120px' : '100px'};
     height: auto;
     margin-bottom: 10px;
     border-radius: 8px;
     background-color: ${({ theme }) => theme.white};
     padding: 8px;
     @media (max-width: 768px) {
-        width: ${props => props.main ? '100px' : '80px'};
+        width: ${props => props.main === "true" ? '100px' : '80px'};
     }
 `;
 
@@ -190,7 +190,7 @@ const Experience = () => {
                                 <CompanyLogo 
                                     src={exp.logo} 
                                     alt={exp.company} 
-                                    main={exp.isMain}
+                                    main={exp.isMain ? "true" : "false"}
                                 />
                                 <div>
                                     <JobTitle>{exp.title}</JobTitle>

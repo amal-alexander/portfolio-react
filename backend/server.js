@@ -11,6 +11,7 @@ const helmet = require("helmet"); // Security middleware
 require("dotenv").config(); // Load environment variables
 
 const postsRouter = require("./routes/posts");
+const similarityRouter = require("./routes/similarity");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ mongoose
 
 // Mount the routers
 app.use("/posts", postsRouter);
+app.use("/similarity", similarityRouter);
 
 // Root route
 app.get("/", (req, res) => {
