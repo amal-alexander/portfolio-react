@@ -14,7 +14,7 @@ const postsRouter = require("./routes/posts");
 const similarityRouter = require("./routes/similarity");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/blog";
 
 // Enable CORS & Security Middleware

@@ -16,6 +16,10 @@ export const Container = styled.div`
     align-items: center;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 98%, 0 100%);
     padding: 50px 20px; /* Adjust padding for mobile */
+    
+    @media (max-width: 480px) {
+        padding: 40px 16px;
+    }
 `;
 
 export const Wrapper = styled.div`
@@ -28,6 +32,15 @@ export const Wrapper = styled.div`
     max-width: 1350px;
     padding: 10px 0px 100px 0;
     gap: 12px;
+    
+    @media (max-width: 768px) {
+        padding: 10px 0px 80px 0;
+    }
+    
+    @media (max-width: 480px) {
+        padding: 10px 0px 60px 0;
+        gap: 8px;
+    }
 `;
 
 export const Title = styled.div`
@@ -103,10 +116,6 @@ const SliderContainer = styled.div`
     justify-content: center;
     margin: 0 auto;
     padding: 0 60px;
-
-    @media (max-width: 768px) {
-        padding: 0 40px;
-    }
 `;
 
 const CardContainer = styled(motion.div)`

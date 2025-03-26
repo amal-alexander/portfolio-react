@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Create a new blog post
 router.post('/', async (req, res) => {
-    const { title, slug, content, category, author } = req.body;
+    const { title, slug, content, category, author, coverImage, codeBlocks, images } = req.body;
 
     // Log the request body for debugging
     console.log('Request Body:', req.body);
@@ -22,7 +22,16 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'A post with this slug already exists.' });
         }
 
-        const newPost = new BlogPost({ title, slug, content, category, author });
+        const newPost = new BlogPost({ 
+            title, 
+            slug, 
+            content, 
+            category, 
+            author,
+            coverImage,
+            codeBlocks,
+            images
+        });
         await newPost.save();
         res.status(201).json(newPost);
     } catch (error) {
@@ -55,7 +64,7 @@ router.get('/:slug', async (req, res) => {
 
 // Update a blog post by ID
 router.put('/:id', async (req, res) => {
-    const { title, slug, content, category, author } = req.body;
+    const { title, slug, content, category, author, coverImage, codeBlocks, images } = req.body;
 
     try {
         // Check if the post exists
@@ -74,7 +83,16 @@ router.put('/:id', async (req, res) => {
 
         const updatedPost = await BlogPost.findByIdAndUpdate(
             req.params.id,
-            { title, slug, content, category, author },
+            { 
+                title, 
+                slug, 
+                content, 
+                category, 
+                author,
+                coverImage,
+                codeBlocks,
+                images
+            },
             { new: true, runValidators: true } // Ensure validators are run
         );
         res.status(200).json(updatedPost);

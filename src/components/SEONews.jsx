@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { seoNews } from "../data/constants.js";
 import NewsCard from "./Card/NewsCard.jsx";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { fetchArticles } from "../api.js";
 
 const Container = styled.section`
     background: linear-gradient(343.07deg, rgba(132, 59, 206, 0.06) 5.71%, rgba(132, 59, 206, 0) 64.83%);
@@ -15,6 +16,10 @@ const Container = styled.section`
     align-items: center;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 98%, 0 100%);
     padding: 50px 20px;
+    
+    @media (max-width: 480px) {
+        padding: 40px 16px;
+    }
 `;
 
 const Title = styled(motion.h2)`
@@ -76,6 +81,12 @@ const CardGrid = styled(motion.div)`
         overflow-x: visible;
         overflow-y: auto;
         max-height: 600px;
+    }
+    
+    @media (max-width: 480px) {
+        gap: 16px;
+        padding: 15px 0;
+        max-height: 500px;
     }
 `;
 

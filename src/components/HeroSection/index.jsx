@@ -17,6 +17,9 @@ export const HeroContainer = styled.div`
     @media (max-width: 640px) {
         padding: 32px 16px;
     }
+    @media (max-width: 480px) {
+        padding: 24px 12px;
+    }
     z-index: 1;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 70% 95%, 0 100%);
 `;
@@ -114,6 +117,11 @@ export const Img = styled.img`
         max-width: 200px;
         max-height: 200px;
     }
+    
+    @media (max-width: 480px) {
+        max-width: 180px;
+        max-height: 180px;
+    }
 `;
 
 export const Title = styled.div`
@@ -167,7 +175,14 @@ export const SubTitle = styled.div`
 
     @media (max-width: 640px) {
         font-size: 16px;
-        line-height: 32px;
+        line-height: 28px;
+        margin-bottom: 32px;
+    }
+    
+    @media (max-width: 480px) {
+        font-size: 14px;
+        line-height: 24px;
+        margin-bottom: 24px;
     }
 `;
 
@@ -193,6 +208,20 @@ const ResumeButton = styled.a`
     background: -webkit-linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     box-shadow:  20px 20px 60px #1F2634,
     -20px -20px 60px #1F2634;
+    
+    @media (max-width: 768px) {
+        max-width: 400px;
+        padding: 14px 0;
+        font-size: 18px;
+    }
+    
+    @media (max-width: 480px) {
+        max-width: 300px;
+        padding: 12px 0;
+        font-size: 16px;
+        border-radius: 16px;
+    }
+    
     &:hover {
         transform: scale(1.05);
     transition: all 0.4s ease-in-out;

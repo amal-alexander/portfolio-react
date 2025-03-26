@@ -37,6 +37,20 @@ const Card = styled.div`
     &:hover ${Button} {
         display: block;
     }
+    
+    @media (max-width: 768px) {
+        width: 300px;
+        height: 450px;
+        padding: 22px 18px;
+        gap: 12px;
+    }
+    
+    @media (max-width: 480px) {
+        width: 280px;
+        height: 420px;
+        padding: 18px 16px;
+        gap: 10px;
+    }
 `
 
 const Image = styled.img`
@@ -45,6 +59,15 @@ const Image = styled.img`
     background-color: ${({ theme }) => theme.white};
     border-radius: 10px;
     box-shadow: 0 0 16px 2px rgba(0,0,0,0.3);
+    object-fit: cover;
+    
+    @media (max-width: 768px) {
+        height: 160px;
+    }
+    
+    @media (max-width: 480px) {
+        height: 140px;
+    }
 `
 
 const Tags = styled.div`
@@ -83,6 +106,14 @@ const Title = styled.div`
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    
+    @media (max-width: 768px) {
+        font-size: 18px;
+    }
+    
+    @media (max-width: 480px) {
+        font-size: 16px;
+    }
 `
 
 const Date = styled.div`
@@ -106,6 +137,17 @@ const Description = styled.div`
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
+    
+    @media (max-width: 768px) {
+        font-size: 14px;
+        margin-top: 6px;
+    }
+    
+    @media (max-width: 480px) {
+        font-size: 13px;
+        margin-top: 4px;
+        -webkit-line-clamp: 2;
+    }
 `
 
 const Members = styled.div`

@@ -27,12 +27,21 @@ const FooterWrapper = styled.footer`
     align-items: center;
     padding: 1rem;
     color: ${({ theme }) => theme.text_primary};
+    
+    @media (max-width: 480px) {
+        padding: 0.8rem;
+        gap: 10px;
+    }
 `;
 
 const Logo = styled.h1`
     font-weight: 600;
     font-size: 20px;
     color: ${({ theme }) => theme.primary};
+    
+    @media (max-width: 480px) {
+        font-size: 18px;
+    }
 `;
 
 const Nav = styled.nav`
@@ -107,6 +116,15 @@ const Copyright = styled.p`
     font-size: 0.9rem;
     color: ${({ theme }) => theme.soft2};
     text-align: center;
+    
+    @media (max-width: 768px) {
+        margin-top: 1.2rem;
+    }
+    
+    @media (max-width: 480px) {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+    }
 `;
 
 function Footer() {

@@ -8,6 +8,10 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    overflow-x: hidden;
+  }
 `;
 
 const BgContainer = styled.div`
@@ -24,12 +28,24 @@ const BgContainer = styled.div`
   overflow: hidden;
   margin: auto;
   z-index: 0;
+  
+  @media (max-width: 768px) {
+    opacity: 0.7; /* Reduce opacity on mobile for better readability */
+  }
+  
+  @media (max-width: 480px) {
+    opacity: 0.5; /* Further reduce opacity on smaller screens */
+  }
 `;
 
 const Content = styled.div`
   position: relative;
   z-index: 1;
   width: 100%;
+  
+  @media (max-width: 768px) {
+    padding: 0 5px;
+  }
 `;
 
 const SectionContainer = ({ children }) => {
@@ -45,4 +61,4 @@ const SectionContainer = ({ children }) => {
   );
 };
 
-export default SectionContainer; 
+export default SectionContainer;

@@ -99,7 +99,7 @@ const App = () => {
                 
                 {/* Blog Page Routes */}
                 <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:id" element={<BlogDetail />} />
+                <Route path="/blog/:slug" element={<BlogDetail />} />
                 
                 {/* SEO Tool Routes */}
                 <Route path="/seo-tool" element={<SEOTool />} />

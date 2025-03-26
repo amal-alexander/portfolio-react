@@ -24,6 +24,10 @@ const NavbarContainer = styled.nav`
     justify-content: space-between;
     align-items: center;
     position: relative;
+    
+    @media (max-width: 480px) {
+        padding: 0.8rem 1rem;
+    }
 `;
 
 const NavLogo = styled(LinkR)`
@@ -32,6 +36,10 @@ const NavLogo = styled(LinkR)`
     align-items: center;
     text-decoration: none;
     font-size: 1.5rem;
+    
+    @media (max-width: 480px) {
+        font-size: 1.2rem;
+    }
 `;
 
 const NavItems = styled.ul`
@@ -73,11 +81,29 @@ const MobileMenu = styled.div`
     justify-content: center;
     gap: 20px;
     z-index: 100;
+    overflow-y: auto;
+    padding: 20px 0;
 
     a {
         font-size: 1.5rem;
         color: white;
         text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        gap: 15px;
+        
+        a {
+            font-size: 1.2rem;
+            padding: 8px 12px;
+        }
     }
 `;
 
@@ -153,7 +179,7 @@ const Navbar = ({ darkMode, setDarkMode, onScrollClick }) => {
                     <CloseIcon onClick={() => setOpen(false)} />
                     {navItems.map(({ id, label }) => (
                         id === 'blog' || id === 'seo-tool' || id === 'content-similarity' ? (
-                            <NavLink key={id} to={`/${id}`}>
+                            <NavLink key={id} to={`/${id}`} onClick={() => setOpen(false)}>
                                 {label}
                             </NavLink>
                         ) : (

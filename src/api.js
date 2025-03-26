@@ -28,6 +28,7 @@ export const getPostById = async (id) => {
 export const fetchArticles = async () => {
   try {
     const response = await axios.get(`${API_URL}/api/news`);
+    console.log('Fetching news from:', `${API_URL}/api/news`);
     return response.data.articles;
   } catch (error) {
     console.error("Error fetching news:", error);

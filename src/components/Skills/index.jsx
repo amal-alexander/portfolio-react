@@ -57,6 +57,16 @@ const SkillsContainer = styled(motion.div)`
     margin-top: 30px;
     gap: 30px;
     justify-content: center;
+    
+    @media (max-width: 768px) {
+        margin-top: 20px;
+        gap: 20px;
+    }
+    
+    @media (max-width: 480px) {
+        margin-top: 15px;
+        gap: 15px;
+    }
 `
 
 const Skill = styled(motion.div)`
@@ -104,19 +114,43 @@ const SkillItem = styled(motion.div)`
     align-items: center;
     justify-content: center;
     gap: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+    
     @media (max-width: 768px) {
         font-size: 14px;
         padding: 8px 12px;
+        gap: 6px;
     }
     @media (max-width: 500px) {
-        font-size: 14px;
-        padding: 6px 12px;
+        font-size: 13px;
+        padding: 6px 10px;
+        gap: 5px;
+        border-radius: 10px;
+    }
+    @media (max-width: 400px) {
+        font-size: 12px;
+        padding: 5px 8px;
     }
 `
 
 const SkillImage = styled.img`
     width: 24px;
     height: 24px;
+    
+    @media (max-width: 768px) {
+        width: 20px;
+        height: 20px;
+    }
+    
+    @media (max-width: 480px) {
+        width: 18px;
+        height: 18px;
+    }
 `
 
 const Skills = () => {
